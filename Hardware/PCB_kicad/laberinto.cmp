@@ -1,0 +1,234 @@
+Cmp-Mod V01 Created by Cvpcb (after 2015-mar-04 BZR unknown)-product   date = Wed 28 Oct 2015 12:11:50 CET
+
+BeginCmp
+TimeStamp = /563029D6;
+Reference = C1;
+ValeurCmp = CP;
+IdModule  = Capacitors_ThroughHole:C_Radial_D8_L11.5_P3.5;
+EndCmp
+
+BeginCmp
+TimeStamp = /56310052;
+Reference = C2;
+ValeurCmp = CP;
+IdModule  = Capacitors_ThroughHole:C_Radial_D8_L11.5_P3.5;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630F71E;
+Reference = C3;
+ValeurCmp = CP;
+IdModule  = Capacitors_ThroughHole:C_Radial_D8_L11.5_P3.5;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630591F;
+Reference = D1;
+ValeurCmp = CLED;
+IdModule  = LEDs:LED-5MM;
+EndCmp
+
+BeginCmp
+TimeStamp = /563021A2;
+Reference = D2;
+ValeurCmp = Dbatt;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /56302043;
+Reference = D3;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630203D;
+Reference = D4;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /56309665;
+Reference = D5;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630965F;
+Reference = D6;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630204F;
+Reference = D7;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /56302049;
+Reference = D8;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /56309671;
+Reference = D9;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630966B;
+Reference = D10;
+ValeurCmp = D;
+IdModule  = diode:custom_diode;
+EndCmp
+
+BeginCmp
+TimeStamp = /562FC725;
+Reference = IC1;
+ValeurCmp = L293D;
+IdModule  = Sockets_DIP:DIP-16__300_ELL;
+EndCmp
+
+BeginCmp
+TimeStamp = /552014A1;
+Reference = P1;
+ValeurCmp = Digital;
+IdModule  = Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x12;
+EndCmp
+
+BeginCmp
+TimeStamp = /55201543;
+Reference = P2;
+ValeurCmp = COM;
+IdModule  = Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x06;
+EndCmp
+
+BeginCmp
+TimeStamp = /55201A4F;
+Reference = P3;
+ValeurCmp = ADC;
+IdModule  = Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x02;
+EndCmp
+
+BeginCmp
+TimeStamp = /552014EF;
+Reference = P4;
+ValeurCmp = Analog;
+IdModule  = Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x12;
+EndCmp
+
+BeginCmp
+TimeStamp = /552112EB;
+Reference = P5;
+ValeurCmp = ADC;
+IdModule  = Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x02;
+EndCmp
+
+BeginCmp
+TimeStamp = /563102A0;
+Reference = P6;
+ValeurCmp = batt;
+IdModule  = Connect:PINHEAD1-2;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630EF1A;
+Reference = P7;
+ValeurCmp = buzzer;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x02;
+EndCmp
+
+BeginCmp
+TimeStamp = /563019D6;
+Reference = P8;
+ValeurCmp = I2C_IMU;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x04;
+EndCmp
+
+BeginCmp
+TimeStamp = /563023C5;
+Reference = P9;
+ValeurCmp = line_ir;
+IdModule  = Pin_Headers:Pin_Header_Angled_1x05;
+EndCmp
+
+BeginCmp
+TimeStamp = /563022CA;
+Reference = P10;
+ValeurCmp = distance;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x05;
+EndCmp
+
+BeginCmp
+TimeStamp = /56305CD1;
+Reference = P11;
+ValeurCmp = M1;
+IdModule  = Connect:PINHEAD1-2;
+EndCmp
+
+BeginCmp
+TimeStamp = /56309677;
+Reference = P12;
+ValeurCmp = M2;
+IdModule  = Connect:PINHEAD1-2;
+EndCmp
+
+BeginCmp
+TimeStamp = /56302588;
+Reference = R1;
+ValeurCmp = R;
+IdModule  = Resistors_ThroughHole:Resistor_Vertical_RM5mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /563026B1;
+Reference = R2;
+ValeurCmp = R;
+IdModule  = Resistors_ThroughHole:Resistor_Vertical_RM5mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /56306F45;
+Reference = R3;
+ValeurCmp = R;
+IdModule  = Resistors_ThroughHole:Resistor_Vertical_RM5mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /56306FA9;
+Reference = R4;
+ValeurCmp = R;
+IdModule  = Resistors_ThroughHole:Resistor_Vertical_RM5mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /56302BF0;
+Reference = R5;
+ValeurCmp = R;
+IdModule  = Resistors_ThroughHole:Resistor_Vertical_RM5mm;
+EndCmp
+
+BeginCmp
+TimeStamp = /56301673;
+Reference = SW1;
+ValeurCmp = SW_PUSH;
+IdModule  = Buttons_Switches_ThroughHole:SW_PUSH_SMALL;
+EndCmp
+
+BeginCmp
+TimeStamp = /5630AF67;
+Reference = SW2;
+ValeurCmp = SWITCH_INV;
+IdModule  = switch:SWITCH_3Pin;
+EndCmp
+
+EndListe

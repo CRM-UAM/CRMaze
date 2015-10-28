@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>/home/carlosgs/Downloads/laberinto/laberinto.sch</source>
+    <date>Wed 28 Oct 2015 02:22:36 CET</date>
+    <tool>Eeschema (after 2015-mar-04 BZR unknown)-product</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>Laberinto robot</title>
+        <company>Club de Robotica-Mecatronica CRM-UAM</company>
+        <rev/>
+        <date>Tue 27 Oct 2015</date>
+        <source>laberinto.sch</source>
+        <comment number="1" value="Derived from Arduino_Pro_Mini template by Jonathan Iapicco"/>
+        <comment number="2" value="Author: Victor Uceda &amp; Carlos Garcia"/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="P1">
+      <value>Digital</value>
+      <footprint>Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x12</footprint>
+      <libsource lib="laberinto-cache" part="CONN_12"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>552014A1</tstamp>
+    </comp>
+    <comp ref="P4">
+      <value>Analog</value>
+      <footprint>Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x12</footprint>
+      <libsource lib="laberinto-cache" part="CONN_12"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>552014EF</tstamp>
+    </comp>
+    <comp ref="P2">
+      <value>COM</value>
+      <footprint>Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x06</footprint>
+      <libsource lib="laberinto-cache" part="CONN_6"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>55201543</tstamp>
+    </comp>
+    <comp ref="P3">
+      <value>ADC</value>
+      <footprint>Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x02</footprint>
+      <libsource lib="laberinto-cache" part="CONN_2"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>55201A4F</tstamp>
+    </comp>
+    <comp ref="P5">
+      <value>ADC</value>
+      <footprint>Socket_Arduino_Pro_Mini:Socket_Strip_Arduino_1x02</footprint>
+      <libsource lib="laberinto-cache" part="CONN_2"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>552112EB</tstamp>
+    </comp>
+    <comp ref="IC1">
+      <value>L293D</value>
+      <footprint>Sockets_DIP:DIP-16__300_ELL</footprint>
+      <libsource lib="l293d" part="L293D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>562FC725</tstamp>
+    </comp>
+    <comp ref="SW1">
+      <value>SW_PUSH</value>
+      <libsource lib="device" part="SW_PUSH"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56301673</tstamp>
+    </comp>
+    <comp ref="P8">
+      <value>I2C_IMU</value>
+      <libsource lib="conn" part="CONN_01X04"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>563019D6</tstamp>
+    </comp>
+    <comp ref="D4">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5630203D</tstamp>
+    </comp>
+    <comp ref="D3">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56302043</tstamp>
+    </comp>
+    <comp ref="D8">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56302049</tstamp>
+    </comp>
+    <comp ref="D7">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5630204F</tstamp>
+    </comp>
+    <comp ref="D2">
+      <value>Dbatt</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>563021A2</tstamp>
+    </comp>
+    <comp ref="P10">
+      <value>distance</value>
+      <libsource lib="conn" part="CONN_01X05"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>563022CA</tstamp>
+    </comp>
+    <comp ref="P9">
+      <value>line_ir</value>
+      <libsource lib="conn" part="CONN_01X05"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>563023C5</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>R</value>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56302588</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>R</value>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>563026B1</tstamp>
+    </comp>
+    <comp ref="C1">
+      <value>CP</value>
+      <libsource lib="device" part="CP"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>563029D6</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>R</value>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56302BF0</tstamp>
+    </comp>
+    <comp ref="D1">
+      <value>LED</value>
+      <libsource lib="device" part="LED"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56302C3E</tstamp>
+    </comp>
+    <comp ref="P11">
+      <value>M1</value>
+      <libsource lib="conn" part="CONN_01X02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56305CD1</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>R</value>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56306F45</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>R</value>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56306FA9</tstamp>
+    </comp>
+    <comp ref="D6">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5630965F</tstamp>
+    </comp>
+    <comp ref="D5">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56309665</tstamp>
+    </comp>
+    <comp ref="D10">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5630966B</tstamp>
+    </comp>
+    <comp ref="D9">
+      <value>D</value>
+      <libsource lib="device" part="D"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56309671</tstamp>
+    </comp>
+    <comp ref="P12">
+      <value>M2</value>
+      <libsource lib="conn" part="CONN_01X02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56309677</tstamp>
+    </comp>
+    <comp ref="P7">
+      <value>buzzer</value>
+      <libsource lib="conn" part="CONN_01X02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5630EF1A</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>CP</value>
+      <libsource lib="device" part="CP"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5630F71E</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>CP</value>
+      <libsource lib="device" part="CP"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>56310052</tstamp>
+    </comp>
+    <comp ref="P6">
+      <value>batt</value>
+      <libsource lib="conn" part="CONN_01X02"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>563102A0</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="device" part="CP">
+      <description>Polarised capacitor</description>
+      <footprints>
+        <fp>CP*</fp>
+        <fp>Elko*</fp>
+        <fp>TantalC*</fp>
+        <fp>C*elec</fp>
+        <fp>c_elec*</fp>
+        <fp>SMD*_Pol</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">CP</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="D">
+      <description>Diode</description>
+      <footprints>
+        <fp>Diode_*</fp>
+        <fp>D-Pak_TO252AA</fp>
+        <fp>*SingleDiode</fp>
+        <fp>*_Diode_*</fp>
+        <fp>*SingleDiode*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A" type="passive"/>
+        <pin num="2" name="K" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="LED">
+      <footprints>
+        <fp>LED-3MM</fp>
+        <fp>LED-5MM</fp>
+        <fp>LED-10MM</fp>
+        <fp>LED-0603</fp>
+        <fp>LED-0805</fp>
+        <fp>LED-1206</fp>
+        <fp>LEDV</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">LED</field>
+      </fields>
+      <pins>
+        <pin num="1" name="A" type="passive"/>
+        <pin num="2" name="K" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R">
+      <description>Resistor</description>
+      <footprints>
+        <fp>R_*</fp>
+        <fp>Resistor_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="SW_PUSH">
+      <description>Push Button</description>
+      <fields>
+        <field name="Reference">SW</field>
+        <field name="Value">SW_PUSH</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X02">
+      <footprints>
+        <fp>Pin_Header_Straight_1X02</fp>
+        <fp>Pin_Header_Angled_1X02</fp>
+        <fp>Socket_Strip_Straight_1X02</fp>
+        <fp>Socket_Strip_Angled_1X02</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X02</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X04">
+      <footprints>
+        <fp>Pin_Header_Straight_1X04</fp>
+        <fp>Pin_Header_Angled_1X04</fp>
+        <fp>Socket_Strip_Straight_1X04</fp>
+        <fp>Socket_Strip_Angled_1X04</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X04</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="CONN_01X05">
+      <footprints>
+        <fp>Pin_Header_Straight_1X05</fp>
+        <fp>Pin_Header_Angled_1X05</fp>
+        <fp>Socket_Strip_Straight_1X05</fp>
+        <fp>Socket_Strip_Angled_1X05</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_01X05</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="laberinto-cache" part="CONN_12">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_12</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="P2" type="passive"/>
+        <pin num="3" name="P3" type="passive"/>
+        <pin num="4" name="P4" type="passive"/>
+        <pin num="5" name="P5" type="passive"/>
+        <pin num="6" name="P6" type="passive"/>
+        <pin num="7" name="P7" type="passive"/>
+        <pin num="8" name="P8" type="passive"/>
+        <pin num="9" name="P9" type="passive"/>
+        <pin num="10" name="P10" type="passive"/>
+        <pin num="11" name="P11" type="passive"/>
+        <pin num="12" name="P12" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="l293d" part="L293D">
+      <fields>
+        <field name="Reference">IC</field>
+        <field name="Value">L293D</field>
+        <field name="Footprint">stepper drivers-DIL16</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1,2EN" type="input"/>
+        <pin num="2" name="1A" type="input"/>
+        <pin num="3" name="1Y" type="output"/>
+        <pin num="4" name="GND1" type="power_in"/>
+        <pin num="5" name="GND2" type="power_in"/>
+        <pin num="6" name="2Y" type="output"/>
+        <pin num="7" name="2A" type="input"/>
+        <pin num="8" name="VCC2" type="power_in"/>
+        <pin num="9" name="3,4EN" type="input"/>
+        <pin num="10" name="3A" type="input"/>
+        <pin num="11" name="3Y" type="output"/>
+        <pin num="12" name="GND4" type="power_in"/>
+        <pin num="13" name="GND3" type="power_in"/>
+        <pin num="14" name="4Y" type="output"/>
+        <pin num="15" name="4A" type="input"/>
+        <pin num="16" name="VCC1" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="laberinto-cache" part="CONN_2">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_2</field>
+      </fields>
+      <pins>
+        <pin num="1" name="P1" type="passive"/>
+        <pin num="2" name="PM" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="laberinto-cache" part="CONN_6">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">CONN_6</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+        <pin num="3" name="3" type="passive"/>
+        <pin num="4" name="4" type="passive"/>
+        <pin num="5" name="5" type="passive"/>
+        <pin num="6" name="6" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="device">
+      <uri>/usr/share/kicad/library/device.lib</uri>
+    </library>
+    <library logical="conn">
+      <uri>/usr/share/kicad/library/conn.lib</uri>
+    </library>
+    <library logical="laberinto-cache">
+      <uri>/home/carlosgs/Downloads/laberinto/laberinto-cache.lib</uri>
+    </library>
+    <library logical="l293d">
+      <uri>/home/carlosgs/Downloads/laberinto/libs/l293d.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="button">
+      <node ref="SW1" pin="1"/>
+      <node ref="P1" pin="10"/>
+    </net>
+    <net code="2" name="/A7">
+      <node ref="P5" pin="1"/>
+    </net>
+    <net code="3" name="/A6">
+      <node ref="P5" pin="2"/>
+    </net>
+    <net code="4" name="M4Y">
+      <node ref="D6" pin="1"/>
+      <node ref="D10" pin="2"/>
+      <node ref="IC1" pin="14"/>
+      <node ref="P12" pin="2"/>
+    </net>
+    <net code="5" name="M3Y">
+      <node ref="D5" pin="1"/>
+      <node ref="P12" pin="1"/>
+      <node ref="D9" pin="2"/>
+      <node ref="IC1" pin="11"/>
+    </net>
+    <net code="6" name="M2Y">
+      <node ref="IC1" pin="6"/>
+      <node ref="P11" pin="2"/>
+      <node ref="D4" pin="1"/>
+      <node ref="D8" pin="2"/>
+    </net>
+    <net code="7" name="/DTR">
+      <node ref="P2" pin="1"/>
+    </net>
+    <net code="8" name="GND">
+      <node ref="C2" pin="2"/>
+      <node ref="IC1" pin="13"/>
+      <node ref="IC1" pin="12"/>
+      <node ref="P6" pin="1"/>
+      <node ref="SW1" pin="2"/>
+      <node ref="P8" pin="2"/>
+      <node ref="P9" pin="2"/>
+      <node ref="P10" pin="2"/>
+      <node ref="D7" pin="1"/>
+      <node ref="D8" pin="1"/>
+      <node ref="D1" pin="2"/>
+      <node ref="C1" pin="2"/>
+      <node ref="R2" pin="2"/>
+      <node ref="IC1" pin="4"/>
+      <node ref="P4" pin="2"/>
+      <node ref="P1" pin="4"/>
+      <node ref="IC1" pin="5"/>
+      <node ref="P2" pin="6"/>
+      <node ref="P2" pin="5"/>
+      <node ref="D10" pin="1"/>
+      <node ref="D9" pin="1"/>
+      <node ref="P7" pin="1"/>
+      <node ref="C3" pin="2"/>
+    </net>
+    <net code="9" name="VCC">
+      <node ref="P9" pin="1"/>
+      <node ref="P10" pin="1"/>
+      <node ref="P8" pin="1"/>
+      <node ref="P4" pin="4"/>
+      <node ref="P2" pin="4"/>
+      <node ref="R3" pin="1"/>
+      <node ref="R4" pin="1"/>
+      <node ref="C2" pin="1"/>
+    </net>
+    <net code="10" name="+BATT">
+      <node ref="IC1" pin="16"/>
+      <node ref="C1" pin="1"/>
+      <node ref="P4" pin="1"/>
+      <node ref="IC1" pin="9"/>
+      <node ref="IC1" pin="1"/>
+      <node ref="IC1" pin="8"/>
+      <node ref="D4" pin="2"/>
+      <node ref="D3" pin="2"/>
+      <node ref="D6" pin="2"/>
+      <node ref="D5" pin="2"/>
+      <node ref="R1" pin="1"/>
+      <node ref="D2" pin="2"/>
+      <node ref="C3" pin="1"/>
+    </net>
+    <net code="11" name="Net-(D2-Pad1)">
+      <node ref="D2" pin="1"/>
+      <node ref="P6" pin="2"/>
+    </net>
+    <net code="12" name="M1A">
+      <node ref="IC1" pin="2"/>
+      <node ref="P4" pin="11"/>
+    </net>
+    <net code="13" name="M1Y">
+      <node ref="D7" pin="2"/>
+      <node ref="P11" pin="1"/>
+      <node ref="D3" pin="1"/>
+      <node ref="IC1" pin="3"/>
+    </net>
+    <net code="14" name="/12(MISO)">
+      <node ref="P4" pin="10"/>
+    </net>
+    <net code="15" name="IR3">
+      <node ref="P10" pin="5"/>
+      <node ref="P4" pin="5"/>
+    </net>
+    <net code="16" name="IR2">
+      <node ref="P10" pin="4"/>
+      <node ref="P4" pin="6"/>
+    </net>
+    <net code="17" name="IR1">
+      <node ref="P4" pin="7"/>
+      <node ref="P10" pin="3"/>
+    </net>
+    <net code="18" name="mbatt">
+      <node ref="R2" pin="1"/>
+      <node ref="P4" pin="8"/>
+      <node ref="R1" pin="2"/>
+    </net>
+    <net code="19" name="/13(SCK)">
+      <node ref="P4" pin="9"/>
+    </net>
+    <net code="20" name="M2A">
+      <node ref="IC1" pin="7"/>
+      <node ref="P4" pin="12"/>
+    </net>
+    <net code="21" name="led">
+      <node ref="P1" pin="12"/>
+      <node ref="D1" pin="1"/>
+    </net>
+    <net code="22" name="buzzer">
+      <node ref="P1" pin="11"/>
+      <node ref="P7" pin="2"/>
+    </net>
+    <net code="23" name="M3A">
+      <node ref="P1" pin="9"/>
+      <node ref="IC1" pin="10"/>
+    </net>
+    <net code="24" name="M4A">
+      <node ref="P1" pin="8"/>
+      <node ref="IC1" pin="15"/>
+    </net>
+    <net code="25" name="IRM">
+      <node ref="P9" pin="4"/>
+      <node ref="P1" pin="7"/>
+    </net>
+    <net code="26" name="IRL">
+      <node ref="P9" pin="3"/>
+      <node ref="P1" pin="6"/>
+    </net>
+    <net code="27" name="IRR">
+      <node ref="P9" pin="5"/>
+      <node ref="P1" pin="5"/>
+    </net>
+    <net code="28" name="/Reset">
+      <node ref="P1" pin="3"/>
+      <node ref="P4" pin="3"/>
+    </net>
+    <net code="29" name="/0(Rx)">
+      <node ref="P1" pin="2"/>
+      <node ref="P2" pin="3"/>
+    </net>
+    <net code="30" name="/1(Tx)">
+      <node ref="P2" pin="2"/>
+      <node ref="P1" pin="1"/>
+    </net>
+    <net code="31" name="SDA">
+      <node ref="R4" pin="2"/>
+      <node ref="P3" pin="2"/>
+      <node ref="P8" pin="4"/>
+    </net>
+    <net code="32" name="SCL">
+      <node ref="P8" pin="3"/>
+      <node ref="P3" pin="1"/>
+      <node ref="R3" pin="2"/>
+    </net>
+    <net code="33" name="Net-(R5-Pad2)">
+      <node ref="R5" pin="2"/>
+    </net>
+    <net code="34" name="Net-(R5-Pad1)">
+      <node ref="R5" pin="1"/>
+    </net>
+  </nets>
+</export>

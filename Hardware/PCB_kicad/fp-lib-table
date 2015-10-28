@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name Socket_Arduino_Pro_Mini)(type KiCad)(uri ${KIPRJMOD}/Socket_Arduino_Pro_Mini.pretty)(options "")(descr ""))
+  (lib (name switch)(type KiCad)(uri ${KIPRJMOD}/libs/switch.pretty)(options "")(descr ""))
+)
