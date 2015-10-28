@@ -1,7 +1,9 @@
 # CRMaze
 Open source robot for maze solving + line following
 
-![](Hardware/OpenScad/CRMaze.png)
+![](Hardware/OpenScad/CRMaze.png)  
+
+![](Hardware/PCB_kicad/layout3D.jpg)  
 
 Authors
 --
