@@ -9,28 +9,34 @@
 //   Sharp IR sensor STL by Mojtaba ( https://grabcad.com/library/ir-sensor )
 
 
+// Increase the resolution of default shapes
+$fa = 5; // Minimum angle for fragments [degrees]
+$fs = 0.5; // Minimum fragment size [mm]
+
+
 largo=75;
 ancho=70;
 grosor=1.6;
 
-module rueda(ra=10,ancho=20){
-    translate([-6,-5,1]) import("motor.stl");
+module rueda(ra=10,ancho=17){
+    translate([-6,-5,1]) import("libs/motor.stl");
 
     color("gray") union() {
-        translate([0,0,19]) difference() {
-            cylinder(r=ra,h=ancho-3);
-            translate([0,0,-ancho/2]) cylinder(r=ra*0.8,h=ancho*2);
-        }
-        difference() {
-            translate([0,0,29]) cylinder(r=ra,h=2);
-            translate([0,0,28]) cylinder(r=2,h=5,$fn=20);
-        }
+        translate([0,0,19])
+            difference() {
+                cylinder(r=ra,h=ancho);
+                difference() {
+                    cylinder(r=3.3/2,h=ancho+1);
+                    translate([-10,1.2,0]) cube([20,20,ancho+2]);
+                }
+                translate([0,0,-0.1]) cylinder(r=8.5,h=9);
+            }
     }
    
 }
 
 module sharp(){
-    scale(10)import("sharp.stl");
+    scale(10)import("libs/sharp.stl");
 }
 module bateria(){
     color("green") cube([58,15,30],center=true);
@@ -56,7 +62,7 @@ module L293(){
 module pcb() {
     union() {
         translate([-5,0,0])
-            cylinder(r=15/2,h=grosor,center=true,$fn=20);
+            cylinder(r=15/2,h=grosor,center=true);
         
         cube([10,35,grosor],center=true);
 
