@@ -1,3 +1,14 @@
+// CRMaze robot
+// By Víctor Uceda & Carlos García
+//   Club de Robótica-Mecatrónica,
+//   Universidad Autónoma de Madrid
+//   http://crm-uam.github.io
+//
+// Derived from:
+//   Pololu motor STL by Andrew Taylor ( https://grabcad.com/library/pololu-micro-motor-1-250-reduction-1 )
+//   Sharp IR sensor STL by Mojtaba ( https://grabcad.com/library/ir-sensor )
+
+
 largo=75;
 ancho=70;
 grosor=1.6;
