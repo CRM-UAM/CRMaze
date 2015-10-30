@@ -24,17 +24,17 @@
 
 byte mazeSol[13][13]={
 {6,10,2,2,2,6,10,6,10,2,6,14,10},
-{5,15,13,15,13,11,5,9,5,13,9,3,3},
-{6,9,0,3,0,3,0,0,0,0,0,3,3},
-{3,0,0,3,0,3,0,0,0,0,0,7,9},
-{1,0,0,7,8,3,2,6,12,10,0,3,0},
-{6,14,10,3,2,7,15,11,0,3,0,7,8},
-{3,1,3,5,11,7,15,11,0,3,0,7,8},
-{3,0,1,4,11,5,13,11,0,3,0,7,8},
-{7,10,0,0,3,2,2,1,0,7,14,13,10},
-{1,3,2,0,3,3,5,10,0,1,3,2,3},
-{6,11,3,2,3,7,12,9,0,2,3,3,3},
-{3,7,15,15,15,11,2,2,2,3,3,7,11},
+{5,15,13,15,13,11,7,11,7,13,9,3,3},
+{6,11,6,11,2,3,3,1,1,4,8,3,3},
+{3,3,3,3,3,3,5,12,12,12,12,15,11},
+{1,1,1,7,9,3,2,6,14,10,2,3,3},
+{6,14,10,3,2,7,15,11,1,3,3,7,11},
+{3,1,3,5,11,7,15,11,4,11,5,15,9},
+{3,2,3,4,11,5,13,11,4,11,4,15,8},
+{7,11,1,2,3,2,2,1,2,7,14,13,10},
+{1,3,2,3,3,3,5,10,7,9,3,2,3},
+{6,11,3,3,3,7,12,9,3,2,3,3,3},
+{3,7,15,15,15,11,2,2,3,3,3,7,11},
 {1,1,1,1,1,1,1,1,1,1,5,9,1}
 }; //matriz con posibles paredes en los indices pares y celdas en los impares. 0 si no hay pared 1 si si.
 
@@ -374,8 +374,8 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
 
   maze[currCoord.getY()][currCoord.getX()].walls=readCurrent();
   entries.push(currCoord);
-  printMaze();
-  pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
+  //printMaze();
+  //pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
   for(uint8_t i=0; i<4; i++){
     uint8_t dir = headings[i];
     //If there's a wall in this dir
@@ -400,25 +400,25 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
          coordUpdate(workingCoord,4);
          break;
       }
-    }
+
       //If the workingEntry is a valid entry and not a dead end, push it onto the stack
       if(checkBounds(workingCoord)&&(!isEnd(workingCoord, desired,lenDesired))){
        // pf("DEBUG\t a la cola-> (%d,%d)\n",workingCoord.x,workingCoord.y);
         entries.push(workingCoord);
-        pf("push (%d,%d)\t",workingCoord.getX(),workingCoord.getY());
+        //pf("push (%d,%d)\t",workingCoord.getX(),workingCoord.getY());
       }
     }
   }
-  pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
+  //pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
 
   //While the entries stack isn't empty
 
   while(!entries.isEmpty()){
-    pf("pila size: %d\n",entries.count());
+    //pf("pila size: %d\n",entries.count());
     //Pop an entry from the stack
     Coord workingEntry = entries.pop();
     uint8_t neighCheck = checkNeighs(workingEntry);
-    pf("DEBUG\t vecino minimo de (%d,%d) es: %d\n",workingEntry.getX(),workingEntry.getY(),neighCheck);
+    //pf("DEBUG\t vecino minimo de (%d,%d) es: %d\n",workingEntry.getX(),workingEntry.getY(),neighCheck);
     //If the least neighbor of the working entry is not one less than the value of the working entry
     //if(workingEntry.getX()==4 && workingEntry.getY()==6)pf("DEBUG ALERTA (4,6): vecinominimo=%d isEnd=%d\n",neighCheck,isEnd(workingEntry,desired,lenDesired));
     if(neighCheck+1!=maze[workingEntry.getY()][workingEntry.getX()].distance && !isEnd(workingEntry,desired,lenDesired)){
@@ -452,7 +452,7 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
       floodFillUpdate(currCoord, desired,lenDesired);
       //printMaze();
       //Serial.println("END UPDATE");
-      printMaze();
+      //printMaze();
       uint8_t nextHeading = orient(currCoord, heading);
       Coord nextCoord = bearingCoord(currCoord, nextHeading);
       //TODO: ADD MOVING INSTRUCTIONS HERE
@@ -531,7 +531,7 @@ void reflood(Coord currCoord, Coord desired[], int lenDesired){
 
   //Run flood fill but without actual motion
   floodFill(desired,9, currCoord, false);
-
+  printMaze();
   //Now, the robot is still at the start, but the maze distance values have been updated with the walls discovered
   //So we follow the maze creating instructions
   createSpeedQueue(currCoord,desired,lenDesired);
