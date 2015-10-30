@@ -103,42 +103,42 @@ void readIMU_YawPitchRoll(float *data) {
 
 // --- BUTTON ---
 
-void init_button_pin() {
-    pinMode(BUTTON_PIN,INPUT);
-    digitalWrite(BUTTON_PIN, HIGH); // Enable internal pull-up resistor
-}
-
-// Returns 1 if the button is being pressed, 0 if it is not
-int button_is_pressed() {
-    return !digitalRead(BUTTON_PIN);
-}
-
-
+//void init_button_pin() {
+//    pinMode(BUTTON_PIN,INPUT);
+//    digitalWrite(BUTTON_PIN, HIGH); // Enable internal pull-up resistor
+//}
+//
+//// Returns 1 if the button is being pressed, 0 if it is not
+//int button_is_pressed() {
+//    return !digitalRead(BUTTON_PIN);
+//}
 
 
 
 
-float getDistanceCM(int pin) {
-    float measurement = analogRead(pin);
-    float ir_K = 4419.36; // Linearization of the sensor response
-    float ir_C = 32.736;
-    if(measurement <= ir_C) return 150;
-    float res = ir_K/(measurement-ir_C);
-    if(res < 0 || res > 150) res = 150;
-    return res;
-}
+
+
+//float getDistanceCM(int pin) {
+//    float measurement = analogRead(pin);
+//    float ir_K = 4419.36; // Linearization of the sensor response
+//    float ir_C = 32.736;
+//    if(measurement <= ir_C) return 150;
+//    float res = ir_K/(measurement-ir_C);
+//    if(res < 0 || res > 150) res = 150;
+//    return res;
+//}
 
 
 
-float mapf(float x, float in_min, float in_max, float out_min, float out_max)
-{
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-float getBatteryVoltage() {
-    int val = analogRead(BATTERY_V_PIN);
-    return mapf(val,0,1023, 0,21.1765); // Voltage divider with 22k in series with 6k8
-}
+//float mapf(float x, float in_min, float in_max, float out_min, float out_max)
+//{
+//    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+//}
+//
+//float getBatteryVoltage() {
+//    int val = analogRead(BATTERY_V_PIN);
+//    return mapf(val,0,1023, 0,21.1765); // Voltage divider with 22k in series with 6k8
+//}
 
 
 void setup() {
@@ -148,7 +148,7 @@ void setup() {
     
     Serial.begin(115200);
     
-    init_button_pin();
+    //init_button_pin();
     
     // To-Do: decide on a cut-off/warning voltage value
     // Low battery notification (program will stop here if 16.5V are not available)
@@ -156,10 +156,10 @@ void setup() {
     //  unrecoverable_error("Battery voltage is too low");
     
     if(ret == 0) {
-      Serial.println("IMU calibration...");
+      //Serial.println("IMU calibration...");
       delay(20000);
-      Serial.println("IMU successfully initialized :-)");
-    } else Serial.println("Error while initializing IMU :-(");
+      //Serial.println("IMU successfully initialized :-)");
+    }// else Serial.println("Error while initializing IMU :-(");
 }
 
 void loop() {
