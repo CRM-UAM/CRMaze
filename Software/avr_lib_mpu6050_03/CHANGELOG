@@ -1,0 +1,14 @@
+0x03
+----
+fix init function, moved mpu6050_setSleepDisabled to top, to
+prevent random incorrect +/- 16g scaling setup at startup
+(fix by Len Spyker <redmond2@iinet.net.au>)
+
+0x02
+----
+correct the quaternion to euler conversion function to fit the
+aerospace sequence standard
+
+0x01
+----
+first release
