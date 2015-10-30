@@ -28,7 +28,7 @@ byte mazeSol[13][13]={
 {6,9,0,3,0,3,0,0,0,0,0,3,3},
 {3,0,0,3,0,3,0,0,0,0,0,7,9},
 {1,0,0,7,8,3,2,6,12,10,0,3,0},
-{6,14,10,3,6,15,15,11,0,3,0,7,8},
+{6,14,10,3,2,7,15,11,0,3,0,7,8},
 {3,1,3,5,11,7,15,11,0,3,0,7,8},
 {3,0,1,4,11,5,13,11,0,3,0,7,8},
 {7,10,0,0,3,2,2,1,0,7,14,13,10},
@@ -70,7 +70,7 @@ Imprime el esado actual de maze con las sitancias en las celdas
 void printMaze(){
   uint8_t i,j;
   for(i=0;i<X;i++)
-    pf("+%.3d+",i+1);
+    pf("+%.3d+",i);
   Serial.println("");
   for (j=0;j<Y;j++){
     for(i=0;i<X;i++){
@@ -110,7 +110,7 @@ void printMaze(){
 
 void setup(){
   //instantiate an empty maze
-  Serial.begin(9600);
+  Serial.begin(115200);
   instantiate();
 delay(1000);
 
@@ -280,11 +280,18 @@ boolean checkBounds(Coord c){
 INPUT: c
 OUTPUT: An integer that is the least neighbor
 */
+
+
 uint8_t checkNeighs(Coord c){
   uint8_t minVal =  255;
+
   for(int i=0; i<4; i++){
     uint8_t dir = headings[i];
     //if this dir is accessible
+    /*if(c.getX()==4 && c.getY()==3){
+        pf("DEBUG checkNeighs (4,3) walls %d, dir%d\n",maze[c.getY()][c.getX()].walls,dir);
+        printMaze();
+    }*/
     if((maze[c.getY()][c.getX()].walls & dir) != 0){
       //Get the coordinate of the accessible neighbor
       Coord neighCoord = bearingCoord(c, dir);
@@ -292,10 +299,14 @@ uint8_t checkNeighs(Coord c){
       if (checkBounds(neighCoord)){
         //if the neighbore is less than the current recording minimum value, update the minimum value
         //If minVal is null, set it right away, otherwise test
-        if(maze[neighCoord.getY()][neighCoord.getX()].distance < minVal){minVal = maze[neighCoord.getY()][neighCoord.getX()].distance;}
+        if(maze[neighCoord.getY()][neighCoord.getX()].distance < minVal){
+            minVal = maze[neighCoord.getY()][neighCoord.getX()].distance;
+           // if(c.getX()==4 && c.getY()==3)pf("DEBUG checkNeighs (4,3)=%d (dir=%d, {%d,%d})\n",minVal,dir,neighCoord.getX(),neighCoord.getY());
+        }
       }
     }
   }
+
   return minVal;
 }
 
@@ -363,7 +374,8 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
 
   maze[currCoord.getY()][currCoord.getX()].walls=readCurrent();
   entries.push(currCoord);
-
+  printMaze();
+  pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
   for(uint8_t i=0; i<4; i++){
     uint8_t dir = headings[i];
     //If there's a wall in this dir
@@ -388,22 +400,25 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
          coordUpdate(workingCoord,4);
          break;
       }
+    }
       //If the workingEntry is a valid entry and not a dead end, push it onto the stack
       if(checkBounds(workingCoord)&&(!isEnd(workingCoord, desired,lenDesired))){
        // pf("DEBUG\t a la cola-> (%d,%d)\n",workingCoord.x,workingCoord.y);
         entries.push(workingCoord);
+        pf("push (%d,%d)\t",workingCoord.getX(),workingCoord.getY());
       }
     }
   }
-  //pf("DEBUG\tNumero en la cola: %d\n",entries.count());
+  pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
 
   //While the entries stack isn't empty
 
   while(!entries.isEmpty()){
+    pf("pila size: %d\n",entries.count());
     //Pop an entry from the stack
     Coord workingEntry = entries.pop();
     uint8_t neighCheck = checkNeighs(workingEntry);
-    //pf("DEBUG\t vecino minimo de (%d,%d) es: %d\n",workingEntry.getX(),workingEntry.getY(),neighCheck);
+    pf("DEBUG\t vecino minimo de (%d,%d) es: %d\n",workingEntry.getX(),workingEntry.getY(),neighCheck);
     //If the least neighbor of the working entry is not one less than the value of the working entry
     //if(workingEntry.getX()==4 && workingEntry.getY()==6)pf("DEBUG ALERTA (4,6): vecinominimo=%d isEnd=%d\n",neighCheck,isEnd(workingEntry,desired,lenDesired));
     if(neighCheck+1!=maze[workingEntry.getY()][workingEntry.getX()].distance && !isEnd(workingEntry,desired,lenDesired)){
@@ -437,7 +452,7 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
       floodFillUpdate(currCoord, desired,lenDesired);
       //printMaze();
       //Serial.println("END UPDATE");
-      //printMaze();
+      printMaze();
       uint8_t nextHeading = orient(currCoord, heading);
       Coord nextCoord = bearingCoord(currCoord, nextHeading);
       //TODO: ADD MOVING INSTRUCTIONS HERE
