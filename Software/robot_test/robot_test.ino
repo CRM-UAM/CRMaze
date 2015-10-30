@@ -162,10 +162,10 @@ void setup() {
     //}// else Serial.println("Error while initializing IMU :-(");
 
     digitalWrite(M2A_PIN, LOW);
-    analogWrite(M1A_PIN, 300);
+    analogWrite(M1A_PIN, 600);
     
     digitalWrite(M4A_PIN, LOW);
-    analogWrite(M3A_PIN, 300);
+    analogWrite(M3A_PIN, 600);
     
 }
 
@@ -173,7 +173,9 @@ void loop() {
     //readIMU_YawPitchRoll(ypr);
     //Serial.println(ypr[0]);
     if(button_is_pressed()) {
-        tone(BUZZER_PIN, 100, 1000);
+        tone(BUZZER_PIN, 1000);
+        delay(100);
+        noTone(BUZZER_PIN);
     }
     delay(100);
 }
