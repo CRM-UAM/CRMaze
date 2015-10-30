@@ -47,70 +47,70 @@ VectorFloat gravity;    // [x, y, z]            gravity vector
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
 int setupIMU() {
-    // join I2C bus (I2Cdev library doesn't do this automatically)
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-      Wire.begin();
-      TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz)
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-      Fastwire::setup(400, true);
-    #endif
+  // join I2C bus (I2Cdev library doesn't do this automatically)
+  #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+    Wire.begin();
+    TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz)
+  #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+    Fastwire::setup(400, true);
+  #endif
 
-    mpu.initialize();
-    mpu.setZGyroOffset(0);
-    
-    delay(500);
-    
-    int16_t ax, ay, az;
-    int16_t gx, gy, gz;
-    int gzf = 0; // Filtered Z gyro measurement
-    for(int i=0; i<16; i++) {
-        mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-        gzf += (int)gz;
-        delay(100);
-    }
-    gzf = round(((float)gzf)/16.);
+  mpu.initialize();
+  mpu.setZGyroOffset(0);
+  
+  delay(500);
+  
+  int16_t ax, ay, az;
+  int16_t gx, gy, gz;
+  int gzf = 0; // Filtered Z gyro measurement
+  for(int i=0; i<16; i++) {
+    mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    gzf += (int)gz;
+    delay(100);
+  }
+  gzf = round(((float)gzf)/16.);
 
-    uint8_t devStatus = mpu.dmpInitialize(); //(0 = success, !0 = error)
+  uint8_t devStatus = mpu.dmpInitialize(); //(0 = success, !0 = error)
 
-    if (devStatus == 0) {
-        // Apply the newly-calibrated offset
-        mpu.setZGyroOffset(-gzf);
+  if (devStatus == 0) {
+    // Apply the newly-calibrated offset
+    mpu.setZGyroOffset(-gzf);
 
-        mpu.setDMPEnabled(true);
-        mpuIntStatus = mpu.getIntStatus();
-        // Get the expected DMP packet size for later comparison
-        packetSize = mpu.dmpGetFIFOPacketSize();
-        dmpReady = true;
-    }
-    return devStatus;
+    mpu.setDMPEnabled(true);
+    mpuIntStatus = mpu.getIntStatus();
+    // Get the expected DMP packet size for later comparison
+    packetSize = mpu.dmpGetFIFOPacketSize();
+    dmpReady = true;
+  }
+  return devStatus;
 }
 
 void readIMU_YawPitchRoll(float *data) {
-    mpu.resetFIFO();
+  mpu.resetFIFO();
 
-    // Wait for correct available data length
-    fifoCount = mpu.getFIFOCount();
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+  // Wait for correct available data length
+  fifoCount = mpu.getFIFOCount();
+  while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
 
-    // Read a packet from FIFO
-    mpu.getFIFOBytes(fifoBuffer, packetSize);
+  // Read a packet from FIFO
+  mpu.getFIFOBytes(fifoBuffer, packetSize);
 
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+  mpu.dmpGetQuaternion(&q, fifoBuffer);
+  mpu.dmpGetGravity(&gravity, &q);
+  mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 }
 
 
 // --- BUTTON ---
 
 void init_button_pin() {
-    pinMode(BUTTON_PIN,INPUT);
-    digitalWrite(BUTTON_PIN, HIGH); // Enable internal pull-up resistor
+  pinMode(BUTTON_PIN,INPUT);
+  digitalWrite(BUTTON_PIN, HIGH); // Enable internal pull-up resistor
 }
 
 // Returns 1 if the button is being pressed, 0 if it is not
 int button_is_pressed() {
-    return !digitalRead(BUTTON_PIN);
+  return !digitalRead(BUTTON_PIN);
 }
 
 
@@ -119,64 +119,120 @@ int button_is_pressed() {
 
 
 float getDistanceCM(int pin) {
-    float measurement = analogRead(pin);
-    float ir_K = 4419.36; // Linearization of the sensor response
-    float ir_C = 32.736;
-    if(measurement <= ir_C) return 150;
-    float res = ir_K/(measurement-ir_C);
-    if(res < 0 || res > 150) res = 150;
-    return res;
+  float measurement = analogRead(pin);
+  float ir_K = 4419.36; // Linearization of the sensor response
+  float ir_C = 32.736;
+  if(measurement <= ir_C) return 150;
+  float res = ir_K/(measurement-ir_C);
+  if(res < 0 || res > 150) res = 150;
+  return res;
 }
 
 
 
 float mapf(float x, float in_min, float in_max, float out_min, float out_max)
 {
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
 float getBatteryVoltage() {
-    int val = analogRead(BATTERY_V_PIN);
-    return mapf(val,0,1023, 0,21.1765); // Voltage divider with 22k in series with 6k8
+  int val = analogRead(BATTERY_V_PIN);
+  return mapf(val,0,1023, 0,21.1765); // Voltage divider with 22k in series with 6k8
+}
+
+
+void init_motor_pins() {
+  pinMode(M1A_PIN,OUTPUT);
+  pinMode(M2A_PIN,OUTPUT);
+  pinMode(M3A_PIN,OUTPUT);
+  pinMode(M4A_PIN,OUTPUT);
+}
+
+void LmotorSpeed(int16_t vel) {
+  if(vel > 0) {
+    digitalWrite(M1A_PIN, LOW);
+    analogWrite(M2A_PIN, vel);
+  } else if(vel < 0) {
+    digitalWrite(M1A_PIN, vel);
+    analogWrite(M2A_PIN, LOW);
+  } else {
+    digitalWrite(M1A_PIN, LOW);
+    digitalWrite(M2A_PIN, LOW);
+  }
+}
+
+void RmotorSpeed(int16_t vel) {
+  if(vel > 0) {
+    digitalWrite(M3A_PIN, LOW);
+    analogWrite(M4A_PIN, vel);
+  } else if(vel < 0) {
+    digitalWrite(M3A_PIN, vel);
+    analogWrite(M4A_PIN, LOW);
+  } else {
+    digitalWrite(M3A_PIN, LOW);
+    digitalWrite(M4A_PIN, LOW);
+  }
+}
+
+uint16_t velocity = 600;
+void goForward() {
+  
 }
 
 
 void setup() {
-    delay(1000);
-    
-    //int ret = setupIMU();
-    
-    Serial.begin(115200);
-    
-    init_button_pin();
-    
-    // To-Do: decide on a cut-off/warning voltage value
-    // Low battery notification (program will stop here if 16.5V are not available)
-    //if(getBatteryVoltage() < 16.5)
-    //  unrecoverable_error("Battery voltage is too low");
-    
-    //if(ret == 0) {
-      //Serial.println("IMU calibration...");
-      //delay(20000);
-      //Serial.println("IMU successfully initialized :-)");
-    //}// else Serial.println("Error while initializing IMU :-(");
+  delay(1000);
+  
+  //int ret = setupIMU();
+  
+  Serial.begin(115200);
+  
+  init_button_pin();
+  init_motor_pins();
+  pinMode(LED_GREEN_PIN, OUTPUT);
+  
+  // Low battery notification (program will stop here if 16.5V are not available)
+  if(getBatteryVoltage() < 6) {
+    while(1) {
+      digitalWrite(LED_GREEN_PIN, HIGH);
+      delay(100);
+      digitalWrite(LED_GREEN_PIN, LOW);
+      delay(100);
+    }
+  }
+  
+  //if(ret == 0) {
+    //Serial.println("IMU calibration...");
+    //delay(20000);
+    //Serial.println("IMU successfully initialized :-)");
+  //}// else Serial.println("Error while initializing IMU :-(");
 
-    digitalWrite(M2A_PIN, LOW);
-    analogWrite(M1A_PIN, 600);
-    
-    digitalWrite(M4A_PIN, LOW);
-    analogWrite(M3A_PIN, 600);
-    
+  pinMode(LED_GREEN_PIN, OUTPUT);
+
+  digitalWrite(LED_GREEN_PIN, HIGH);
 }
 
 void loop() {
-    //readIMU_YawPitchRoll(ypr);
-    //Serial.println(ypr[0]);
-    if(button_is_pressed()) {
-        tone(BUZZER_PIN, 1000);
-        delay(100);
-        noTone(BUZZER_PIN);
-    }
+
+  for(uint16_t i=-500; i<500; i++) {
+      LmotorSpeed(i);
+      delay(10);
+  }
+  LmotorSpeed(0);
+  
+  for(uint16_t i=-500; i<500; i++) {
+      RmotorSpeed(i);
+      delay(10);
+  }
+  RmotorSpeed(0);
+  
+  //readIMU_YawPitchRoll(ypr);
+  //Serial.println(ypr[0]);
+  if(button_is_pressed()) {
+    tone(BUZZER_PIN, 1000);
     delay(100);
+    noTone(BUZZER_PIN);
+  }
+  delay(100);
 }
 
