@@ -130,7 +130,7 @@ THE SOFTWARE.
 // this block of memory gets written to the MPU on start-up, and it seems
 // to be volatile memory, so it has to be done each time (it only takes ~1
 // second though)
-const unsigned char dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM = {
+const unsigned char *dmpMemory;/*[MPU6050_DMP_CODE_SIZE] PROGMEM = {
     // bank 0, 256 bytes
     0xFB, 0x00, 0x00, 0x3E, 0x00, 0x0B, 0x00, 0x36, 0x00, 0x01, 0x00, 0x02, 0x00, 0x03, 0x00, 0x00,
     0x00, 0x65, 0x00, 0x54, 0xFF, 0xEF, 0x00, 0x00, 0xFA, 0x80, 0x00, 0x0B, 0x12, 0x82, 0x00, 0x01,
@@ -267,7 +267,7 @@ const unsigned char dmpMemory[MPU6050_DMP_CODE_SIZE] PROGMEM = {
     0xA3, 0xB2, 0xA3, 0xA3, 0xA3, 0xA3, 0xA3, 0xA3, 0xB0, 0x87, 0xB5, 0x99, 0xF1, 0xA3, 0xA3, 0xA3,
     0x98, 0xF1, 0xA3, 0xA3, 0xA3, 0xA3, 0x97, 0xA3, 0xA3, 0xA3, 0xA3, 0xF3, 0x9B, 0xA3, 0xA3, 0xDC,
     0xB9, 0xA7, 0xF1, 0x26, 0x26, 0x26, 0xD8, 0xD8, 0xFF
-};
+};*/
 
 // thanks to Noah Zerkin for piecing this stuff together!
 const unsigned char dmpConfig[MPU6050_DMP_CONFIG_SIZE] PROGMEM = {
@@ -362,11 +362,11 @@ uint8_t MPU6050::dmpInitialize() {
     int8_t ygOffsetTC = getYGyroOffsetTC();
     int8_t zgOffsetTC = getZGyroOffsetTC();
     DEBUG_PRINT(F("X gyro offset = "));
-    DEBUG_PRINTLN(xgOffset);
+    DEBUG_PRINTLN(xgOffsetTC);
     DEBUG_PRINT(F("Y gyro offset = "));
-    DEBUG_PRINTLN(ygOffset);
+    DEBUG_PRINTLN(ygOffsetTC);
     DEBUG_PRINT(F("Z gyro offset = "));
-    DEBUG_PRINTLN(zgOffset);
+    DEBUG_PRINTLN(zgOffsetTC);
 
     // setup weird slave stuff (?)
     DEBUG_PRINTLN(F("Setting slave 0 address to 0x7F..."));

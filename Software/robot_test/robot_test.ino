@@ -183,7 +183,7 @@ void goForward() {
 void setup() {
   delay(1000);
   
-  //int ret = setupIMU();
+  int ret = setupIMU();
   
   Serial.begin(115200);
   
