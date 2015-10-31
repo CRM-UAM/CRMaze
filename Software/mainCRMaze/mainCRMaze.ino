@@ -22,21 +22,26 @@
   uint8_t posYrobot=0;
   int totalMove=0;
 
+
+
 byte mazeSol[13][13]={
-{4,10,4,14,10,6,10,6,12,8,6,14,8},
-{2,5,12,9,5,9,3,5,10,6,9,5,10},
-{7,12,10,6,14,8,5,10,3,3,6,10,3},
-{5,10,5,9,3,6,12,9,5,9,3,5,11},
-{2,3,6,10,5,9,4,12,14,10,3,2,3},
-{7,9,3,5,10,6,14,10,3,5,9,7,9},
-{3,2,7,8,3,7,15,11,3,6,12,9,2},
-{3,3,3,6,9,5,15,9,3,5,12,10,3},
-{3,7,9,5,12,12,15,10,5,12,10,5,11},
-{3,5,8,6,10,6,9,5,12,10,3,2,3},
-{5,12,12,9,5,9,6,10,6,9,3,3,3},
-{6,10,6,10,6,10,3,3,5,10,3,7,9},
-{1,5,9,5,9,5,9,5,12,13,9,5,8}
+{4,12,10,4,12,12,12,14,10,6,10,4,10},
+{4,10,5,10,6,12,12,9,5,9,5,12,11},
+{6,13,10,3,3,4,14,14,12,8,6,12,9},
+{3,6,9,5,9,6,9,1,6,12,9,6,10},
+{3,5,12,8,6,13,12,12,9,6,8,3,3},
+{7,12,10,6,9,6,14,10,2,7,12,9,3},
+{1,6,11,5,10,7,15,11,5,9,6,12,11},
+{6,9,1,6,9,5,15,9,6,12,9,6,9},
+{5,10,6,9,4,14,13,10,7,10,4,11,2},
+{6,11,3,6,10,5,10,5,9,5,10,3,3},
+{3,1,5,9,3,2,7,12,12,8,3,3,3},
+{7,14,8,6,9,5,9,6,12,12,9,5,11},
+{1,5,12,13,12,12,12,9,4,12,12,12,9}
 }; //matriz con posibles paredes en los indices pares y celdas en los impares. 0 si no hay pared 1 si si.
+
+
+
 
 void pf(char *fmt, ... ){
         char buf[128]; // resulting string limited to 128 chars
@@ -450,9 +455,9 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
   * 8 = W
   */
   while(maze[currCoord.getY()][currCoord.getX()].distance != 0){
-
+  
       floodFillUpdate(currCoord, desired,lenDesired);
-      //printMaze();
+      //if(!isMoving)printMaze();
       //Serial.println("END UPDATE");
       //printMaze();
       uint8_t nextHeading = orient(currCoord, heading);
@@ -488,10 +493,11 @@ void instantiateReflood(){
 }
 
 
-void createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired){
+long createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired, long maxLengthPath){
   byte workingDir = EAST;
   int workingDist = 1;
-  while(!isEnd(workingCoord,desired,lenDesired)){
+  long len=0;
+  while(!isEnd(workingCoord,desired,lenDesired) && len<(maxLengthPath+5)){
     byte optimalDir = orient(workingCoord, workingDir);
 
     //If the direction is the same, accumulate distance
@@ -519,24 +525,27 @@ void createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired){
       //Reset the distance to one square and update the workingDir
       workingDist = 1;
       workingDir = optimalDir;
+      len++;
     }
 
     //update workingCoord to the next optimal coord
     workingCoord = bearingCoord(workingCoord, optimalDir);
   }
   pf("avanzar: %d celdas\n",workingDist);
+  if(!isEnd(workingCoord,desired,lenDesired))Serial.println("*RUTA NO VALIDA*");
+  return len;
 }
 
-void reflood(Coord currCoord, Coord desired[], int lenDesired){
+void reflood(Coord currCoord, Coord desired[], int lenDesired, long lenPath){
   //Refill the maze for most optimistic values, but now the maze has walls
   instantiateReflood();
-
+ printMaze();
   //Run flood fill but without actual motion
   floodFill(desired,9, currCoord, false);
   printMaze();
   //Now, the robot is still at the start, but the maze distance values have been updated with the walls discovered
   //So we follow the maze creating instructions
-  createSpeedQueue(currCoord,desired,lenDesired);
+  createSpeedQueue(currCoord,desired,lenDesired,lenPath);
   //We now have a queue of instructions.
 
 }
@@ -547,9 +556,10 @@ void loop(){
   Coord desired[] = {Coord(5,5),Coord(5,6),Coord(5,7),Coord(6,5),Coord(6,6),Coord(6,7),Coord(7,5),Coord(7,6),Coord(7,7)};
 
   floodFill(desired,9, Coord(0,0),true);
-  Serial.println("****FIN FLOOD_FILL 1*****");
+  Serial.println("**FIN FLOOD_FILL 1");
+  pf("movimientos: %d***\n",totalMove);
   printMaze();
-
+  long lenPath=createSpeedQueue(Coord(0,0),desired,9,1000);
 
   Serial.println("***VOLVIENDO AL ORIGEN****");
   Coord returnCoord3[] = {Coord(0,0)};
@@ -561,7 +571,7 @@ void loop(){
 
 
   //pf("**SOLUCION (Realizados %d mov para rastrear):\n");
-  reflood(Coord(0,0),desired,9);
+  reflood(Coord(0,0),desired,9,lenPath);
   //Serial.println("*****FIN FLOOD_FILL Reflood****");
   //printMaze();
   Serial.println("****END PROGRAM*******");
