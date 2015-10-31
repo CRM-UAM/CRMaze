@@ -148,29 +148,29 @@ void init_motor_pins() {
   pinMode(M4A_PIN,OUTPUT);
 }
 
-void LmotorSpeed(int16_t vel) {
+void LmotorSpeed(int vel) {
   if(vel > 0) {
-    digitalWrite(M1A_PIN, LOW);
+    analogWrite(M1A_PIN, 0);
     analogWrite(M2A_PIN, vel);
   } else if(vel < 0) {
-    digitalWrite(M1A_PIN, vel);
-    analogWrite(M2A_PIN, LOW);
+    analogWrite(M1A_PIN, -vel);
+    analogWrite(M2A_PIN, 0);
   } else {
-    digitalWrite(M1A_PIN, LOW);
-    digitalWrite(M2A_PIN, LOW);
+    analogWrite(M1A_PIN, 0);
+    analogWrite(M2A_PIN, 0);
   }
 }
 
-void RmotorSpeed(int16_t vel) {
+void RmotorSpeed(int vel) {
   if(vel > 0) {
-    digitalWrite(M3A_PIN, LOW);
+    analogWrite(M3A_PIN, 0);
     analogWrite(M4A_PIN, vel);
   } else if(vel < 0) {
-    digitalWrite(M3A_PIN, vel);
-    analogWrite(M4A_PIN, LOW);
+    analogWrite(M3A_PIN, -vel);
+    analogWrite(M4A_PIN, 0);
   } else {
-    digitalWrite(M3A_PIN, LOW);
-    digitalWrite(M4A_PIN, LOW);
+    analogWrite(M3A_PIN, 0);
+    analogWrite(M4A_PIN, 0);
   }
 }
 
@@ -214,15 +214,15 @@ void setup() {
 
 void loop() {
 
-  for(uint16_t i=-500; i<500; i++) {
+  for(int i=-250; i<250; i+=2) {
       LmotorSpeed(i);
-      delay(10);
+      delay(20);
   }
   LmotorSpeed(0);
   
-  for(uint16_t i=-500; i<500; i++) {
+  for(int i=-250; i<250; i+=2) {
       RmotorSpeed(i);
-      delay(10);
+      delay(20);
   }
   RmotorSpeed(0);
   
@@ -233,6 +233,15 @@ void loop() {
     delay(100);
     noTone(BUZZER_PIN);
   }
-  delay(100);
+  delay(1000);
+  LmotorSpeed(150);
+  RmotorSpeed(150);
+  delay(1000);
+  LmotorSpeed(-150);
+  RmotorSpeed(-150);
+  delay(1000);
+  LmotorSpeed(0);
+  RmotorSpeed(0);
+  delay(2000);
 }
 

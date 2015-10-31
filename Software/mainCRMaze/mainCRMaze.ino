@@ -19,23 +19,23 @@
 
 //Variables para simulacion de un laberinto y comprobar la correccion
   uint8_t posXrobot=0;
-  uint8_t posYrobot=12;
+  uint8_t posYrobot=0;
   int totalMove=0;
 
 byte mazeSol[13][13]={
-{6,10,2,2,2,6,10,6,10,2,6,14,10},
-{5,15,13,15,13,11,7,11,7,13,9,3,3},
-{6,11,6,11,2,3,3,1,1,4,8,3,3},
-{3,3,3,3,3,3,5,12,12,12,12,15,11},
-{1,1,1,7,9,3,2,6,14,10,2,3,3},
-{6,14,10,3,2,7,15,11,1,3,3,7,11},
-{3,1,3,5,11,7,15,11,4,11,5,15,9},
-{3,2,3,4,11,5,13,11,4,11,4,15,8},
-{7,11,1,2,3,2,2,1,2,7,14,13,10},
-{1,3,2,3,3,3,5,10,7,9,3,2,3},
-{6,11,3,3,3,7,12,9,3,2,3,3,3},
-{3,7,15,15,15,11,2,2,3,3,3,7,11},
-{1,1,1,1,1,1,1,1,1,1,5,9,1}
+{4,10,4,14,10,6,10,6,12,8,6,14,8},
+{2,5,12,9,5,9,3,5,10,6,9,5,10},
+{7,12,10,6,14,8,5,10,3,3,6,10,3},
+{5,10,5,9,3,6,12,9,5,9,3,5,11},
+{2,3,6,10,5,9,4,12,14,10,3,2,3},
+{7,9,3,5,10,6,14,10,3,5,9,7,9},
+{3,2,7,8,3,7,15,11,3,6,12,9,2},
+{3,3,3,6,9,5,15,9,3,5,12,10,3},
+{3,7,9,5,12,12,15,10,5,12,10,5,11},
+{3,5,8,6,10,6,9,5,12,10,3,2,3},
+{5,12,12,9,5,9,6,10,6,9,3,3,3},
+{6,10,6,10,6,10,3,3,5,10,3,7,9},
+{1,5,9,5,9,5,9,5,12,13,9,5,8}
 }; //matriz con posibles paredes en los indices pares y celdas en los impares. 0 si no hay pared 1 si si.
 
 void pf(char *fmt, ... ){
@@ -85,17 +85,19 @@ void printMaze(){
         Serial.print("|");
       else
         Serial.print(" ");
-      if(i==posXrobot && j==posYrobot)
-        pf("^%d",maze[j][i].distance);
+      if (maze[j][i].distance/100) pf("%d",maze[j][i].distance);
       else
-        pf(" %d",maze[j][i].distance);
-      if(maze[j][i].distance < 10) pf(" ");
+        if(i==posXrobot && j==posYrobot)
+          pf("^%d",maze[j][i].distance);
+        else
+          pf(" %d",maze[j][i].distance);
+        if(maze[j][i].distance < 10) pf(" ");
       if(!(maze[j][i].walls & EAST))
         Serial.print("|");
       else
         Serial.print(" ");
     }
-    pf("%d\n",j);
+    pf(" -%d\n",j);
     for(i=0;i<X;i++){
       if(!(maze[j][i].walls & SOUTH))
         Serial.print("+---+");
@@ -440,7 +442,7 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
 
 void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving){
 
-  uint8_t heading = 1;
+  uint8_t heading = 4;
   /*Integer representation of heading
   * 1 = N
   * 4 = E
@@ -487,7 +489,7 @@ void instantiateReflood(){
 
 
 void createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired){
-  byte workingDir = NORTH;
+  byte workingDir = EAST;
   int workingDist = 1;
   while(!isEnd(workingCoord,desired,lenDesired)){
     byte optimalDir = orient(workingCoord, workingDir);
@@ -544,28 +546,13 @@ void loop(){
 
   Coord desired[] = {Coord(5,5),Coord(5,6),Coord(5,7),Coord(6,5),Coord(6,6),Coord(6,7),Coord(7,5),Coord(7,6),Coord(7,7)};
 
-  floodFill(desired,9, Coord(0,12),true);
+  floodFill(desired,9, Coord(0,0),true);
   Serial.println("****FIN FLOOD_FILL 1*****");
   printMaze();
 
 
-  //Serial.println("***esquina****");
-  //coord returnCoord[] = {{12,0}};
-  //resetToCoord(returnCoord[0]);
-  //floodFill(returnCoord,1, {posXrobot,posYrobot},true);
-  //Serial.println("*****FIN FLOOD_FILL esquina*******");
-  //printMaze();
-
-  //Serial.println("***VOLVIENDO AL CENTRO****");
-  //coord returnCoord2[] = {{5,5}};
-  //resetToCoord(returnCoord2[0]);
-  //floodFill(returnCoord2,1, {posXrobot,posYrobot},true);
-  //Serial.println("*****FIN FLOOD_FILL centro*******");
-  //printMaze();
-
-
   Serial.println("***VOLVIENDO AL ORIGEN****");
-  Coord returnCoord3[] = {Coord(0,12)};
+  Coord returnCoord3[] = {Coord(0,0)};
   resetToCoord(returnCoord3[0]);
   floodFill(returnCoord3,1, Coord(posXrobot,posYrobot),true);
   Serial.println("*****FIN FLOOD_FILL Retorno*******");
@@ -574,7 +561,7 @@ void loop(){
 
 
   //pf("**SOLUCION (Realizados %d mov para rastrear):\n");
-  reflood(Coord(0,12),desired,9);
+  reflood(Coord(0,0),desired,9);
   //Serial.println("*****FIN FLOOD_FILL Reflood****");
   //printMaze();
   Serial.println("****END PROGRAM*******");

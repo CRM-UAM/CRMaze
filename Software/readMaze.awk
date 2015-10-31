@@ -2,7 +2,7 @@ BEGIN{
     j=0;i=0;
 }
 {
-    if(j<27)for(i=1;i<=27;i++)m[j,i-1]=$i;print(j);j++;
+    if(j<27)for(i=1;i<=27;i++)m[j,i-1]=$i;j++;
 }
 END{
 print("{");
