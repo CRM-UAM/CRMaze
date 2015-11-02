@@ -19,15 +19,15 @@ void init_IMU() {
     delay(100);
   }
 
-  IMUwriteReg(MPU6050_PWR_MGMT_1, bit(0) | bit(1) ); // set clock source to Z Gyro (D0,D1=1, D2=0) and set SLEEP to zero (D6=0, wakes up the MPU-6050)
+  IMUwriteReg(MPU6050_PWR_MGMT_1, bit(0) | bit(1) ); // set clock source to Z Gyro (D0=D1=1, D2=0) and set SLEEP to zero (D6=0, wakes up the MPU-6050)
 
-  IMUwriteReg(MPU6050_ACCEL_CONFIG, bit(3) | bit(4) ); // set sensitivity to +-16G (D3=1,D4=1) and disable high pass filter (D0,D1,D2=0)
+  IMUwriteReg(MPU6050_ACCEL_CONFIG, bit(3) | bit(4) ); // set sensitivity to +-16G (D3=1, D4=1) and disable high pass filter (D0,D1,D2=0)
 
-  IMUwriteReg(MPU6050_GYRO_CONFIG, bit(3) | bit(4) ); // set sensitivity to +-2000deg/s (D3=1,D4=1)
+  IMUwriteReg(MPU6050_GYRO_CONFIG, bit(3) | bit(4) ); // set sensitivity to +-2000deg/s (D3=1, D4=1)
 
   IMUwriteReg(MPU6050_SMPLRT_DIV, 0 ); // set sampling rate to 1khz (1khz / (1 + 0) = 1000 Hz)
 
-  IMUwriteReg(MPU6050_CONFIG, bit(1) | bit(5) ); // set digital low pass filter to 94hz (D0,D2=0, D1=1) and EXT_SYNC to GYRO_ZOUT (D3,D4=0, D5=1)
+  IMUwriteReg(MPU6050_CONFIG, bit(0) | bit(5) ); // set digital low pass filter to 184hz (D0=1, D1=D2=0) and EXT_SYNC to GYRO_ZOUT (D3=D4=0, D5=1)
 }
 
 
@@ -160,7 +160,7 @@ void readIMU(int16_t *AcY, int16_t *GyZ) {
   Wire.beginTransmission(MPU);
   Wire.write(0x3D);  // starting with register 0x3D (ACCEL_YOUT_H)
   Wire.endTransmission(false);
-  Wire.requestFrom(MPU,12,true);  // request a total of 2 registers
+  Wire.requestFrom(MPU,12,true);  // request a total of 12 registers
   *AcY = Wire.read()<<8|Wire.read();  // 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
   for(int i=0; i<8; i++) Wire.read(); // Discard 0x3F-0x46
   *GyZ = Wire.read()<<8 | Wire.read();  // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
