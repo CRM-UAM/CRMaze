@@ -27,7 +27,7 @@ void init_IMU() {
 
   IMUwriteReg(MPU6050_SMPLRT_DIV, 0 ); // set sampling rate to 1khz (1khz / (1 + 0) = 1000 Hz)
 
-  IMUwriteReg(MPU6050_CONFIG, bit(0) | bit(5) ); // set digital low pass filter to 184hz (D0=1, D1=D2=0) and EXT_SYNC to GYRO_ZOUT (D3=D4=0, D5=1)
+  IMUwriteReg(MPU6050_CONFIG, bit(0) | bit(5) ); // disable digital low pass filter (D0=D1=D2=0) and EXT_SYNC to GYRO_ZOUT (D3=D4=0, D5=1)
 }
 
 
