@@ -20,6 +20,7 @@
 //Variables para simulacion de un laberinto y comprobar la correccion
   uint8_t posXrobot=0;
   uint8_t posYrobot=0;
+  uint8_t headingRobot=2;
   int totalMove=0;
 
 
@@ -64,6 +65,42 @@ uint8_t wallsAt(uint8_t posX, uint8_t posY){
   if(!mazeSol[nY][nX+1])ret+=4; //no hay pared al este
   //pf("DEBUG WALLSAT (%d,%d)=%d\n",posX,posY,ret);
   return ret;*/
+}
+
+boolean isWall(float d){
+    if( d <= 15 && d >=140)return true;
+    return false;
+}
+
+uint8_t wallsAtSensors(){
+  boolean pF=isWall(getDistanceCM(DIST_1_PIN));
+  boolean pR=isWall(getDistanceCM(DIST_1_PIN));
+  boolean pL=isWall(getDistanceCM(DIST_1_PIN));
+  uint8_t ret=0;
+  switch(headingRobot){
+    case NORTH:
+        if(!pF)ret+=NORTH;
+        if(!pR)ret+=EAST;
+        if(!pL)ret+=WEST;
+        return ret+SOUTH; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
+    case EAST:
+        if(!pF)ret+=EAST;
+        if(!pR)ret+=SOUTH;
+        if(!pL)ret+=NORTH;
+        return ret+WEST; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
+    case SOUTH:
+        if(!pF)ret+=SOUTH;
+        if(!pR)ret+=WEST;
+        if(!pL)ret+=EAST;
+        return ret+NORTH; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
+    case WEST:
+        if(!pF)ret+=WEST;
+        if(!pR)ret+=NORTH;
+        if(!pL)ret+=SOUTH;
+        return ret+EAST; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
+    default:
+        return -1;
+  }
 }
 
 /*
@@ -455,7 +492,7 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
   * 8 = W
   */
   while(maze[currCoord.getY()][currCoord.getX()].distance != 0){
-  
+
       floodFillUpdate(currCoord, desired,lenDesired);
       //if(!isMoving)printMaze();
       //Serial.println("END UPDATE");
