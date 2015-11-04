@@ -101,9 +101,39 @@ translate([0,0,6]) {
 //translate([largo/1.3-largo/9,ancho/2,30+6])mirror([0,1,0])rotate([0,90,0])sharp();
 //translate([-10,15,30+6+8])rotate([0,0,-90])sharp();
    
-translate([35,0,15]) bateria();
+translate([35,0,16]) bateria();
 //translate([50,-2,7]) MPU6050(); 
 //translate([30,-25,7]) L293(); 
 
 //!projection(cut=true)
     pcb();
+
+!difference(){
+union() {
+    translate([-13.5,-36.5,35]) linear_extrude(height=2) {
+        //import("laberinto-B_Cu.dxf");
+        hull() import("laberinto-Edge_Cuts.dxf");
+    }
+   translate([-8.5,-0.2,0])difference(){
+        cylinder(d=6.5,h=35);
+        translate([0,0,-20])cylinder(d=2.7,h=30);
+    }
+    translate([41.5,-28.5,0])difference(){
+        cylinder(d=6.5,h=35);
+        translate([0,0,-20])cylinder(d=2.7,h=30);
+    }
+    translate([57.2,15.3,0])difference(){
+        cylinder(d=6.5,h=35);
+        translate([0,0,-20])cylinder(d=2.7,h=30);
+    }
+}
+    translate([57,0,0])cylinder(r=14,h=100,$fn=5);
+    translate([35,19,36.4])rotate([0,0,-90])linear_extrude(15)scale(0.7)text("CRMaze",center=true);
+    translate([0,0,0])cube([8,10,100],center=true);
+    translate([12,0,0])cube([8,10,100],center=true);
+    translate([24,0,0])cube([8,10,100],center=true);
+    translate([34,-25,35])rotate([0,0,45])cube([8,10,10],center=true);
+    translate([34,25,0])rotate([0,0,-45])cube([8,10,100],center=true);
+    translate([18,-25,0])rotate([0,0,45])cube([8,10,100],center=true);
+    translate([18,25,0])rotate([0,0,-45])cube([8,10,100],center=true);
+}
