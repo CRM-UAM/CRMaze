@@ -157,8 +157,8 @@ void Rmotor_PWM(int16_t vel) {
 
 // Calibrated motor functions (cm/s)
 #define motorDeadZonePWM 25
-#define motorK_PWM       100
-#define motorK_CMs       30
+#define motorK_PWM       40
+#define motorK_CMs       49.5
 int16_t map_vel_pwm(float vel) {
   int16_t res = 0;
   if(vel > 0)
@@ -308,7 +308,15 @@ void setup() {
       delay(100);
     }
   }
-  
+
+  while(1) {
+    Serial.print(getDistanceCM(DIST_1_PIN));
+    Serial.print("\t");
+    Serial.print(getDistanceCM(DIST_2_PIN));
+    Serial.print("\t");
+    Serial.println(getDistanceCM(DIST_3_PIN));
+    delay(100);
+  }
   
   digitalWrite(RED_LED_PIN, HIGH);
   
@@ -330,6 +338,15 @@ void setup() {
   delay(3000);
   Lmotor_PWM(0);
   Rmotor_PWM(0);
+
+
+  while(!button_is_pressed());
+  digitalWrite(GREEN_LED_PIN, HIGH);
+  delay(1000);
+
+  set_motor_speed(50, 0); // 50cm/s
+  delay(2000); // 2s
+  set_motor_speed(0, 0);
   while(1);
 
   // Use this to estimate motorDeadZonePWM
