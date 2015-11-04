@@ -108,6 +108,10 @@ translate([35,0,16]) bateria();
 //!projection(cut=true)
     pcb();
 
+
+dTornillo=3;
+xSharp=8;
+ySharp=10.5;
 !difference(){
 union() {
     translate([-13.5,-36.5,35]) linear_extrude(height=2) {
@@ -116,24 +120,25 @@ union() {
     }
    translate([-8.5,-0.2,0])difference(){
         cylinder(d=6.5,h=35);
-        translate([0,0,-20])cylinder(d=2.7,h=30);
+        translate([0,0,-20])cylinder(d=dTornillo,h=30);
     }
     translate([41.5,-28.5,0])difference(){
         cylinder(d=6.5,h=35);
-        translate([0,0,-20])cylinder(d=2.7,h=30);
+        translate([0,0,-20])cylinder(d=dTornillo,h=30);
     }
     translate([57.2,15.3,0])difference(){
         cylinder(d=6.5,h=35);
-        translate([0,0,-20])cylinder(d=2.7,h=30);
+        translate([0,0,-20])cylinder(d=dTornillo,h=30);
     }
 }
-    translate([57,0,0])cylinder(r=14,h=100,$fn=5);
-    translate([35,19,36.4])rotate([0,0,-90])linear_extrude(15)scale(0.7)text("CRMaze",center=true);
-    translate([0,0,0])cube([8,10,100],center=true);
-    translate([12,0,0])cube([8,10,100],center=true);
-    translate([24,0,0])cube([8,10,100],center=true);
-    translate([34,-25,35])rotate([0,0,45])cube([8,10,10],center=true);
-    translate([34,25,0])rotate([0,0,-45])cube([8,10,100],center=true);
-    translate([18,-25,0])rotate([0,0,45])cube([8,10,100],center=true);
-    translate([18,25,0])rotate([0,0,-45])cube([8,10,100],center=true);
+    translate([60,0,0])cylinder(r=10,h=100,$fn=5);
+    translate([38,22,35.7])rotate([0,0,-90])linear_extrude(15)scale(0.8)text("CRMaze", font="Liberation Sans:style=Bold");
+    for(i=[0:4]){
+        translate([8*i-3,0,0])cube([3,8.5,100],center=true);
+    }
+    
+    translate([34,-25,35])rotate([0,0,45])cube([xSharp,ySharp,10],center=true); 
+    translate([34,25,0])rotate([0,0,-45])cube([xSharp,ySharp,100],center=true);
+    translate([18,-25,0])rotate([0,0,45])cube([xSharp,ySharp,100],center=true);
+    translate([18,25,0])rotate([0,0,-45])cube([xSharp,ySharp,100],center=true);
 }
