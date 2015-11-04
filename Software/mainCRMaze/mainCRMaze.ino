@@ -5,6 +5,10 @@
 #include "Coord.h"
 #include "entry.h"
 
+#define DIST_3_PIN      A3
+#define DIST_2_PIN      A2
+#define DIST_1_PIN      A1
+
 #define NORTH 1
 #define SOUTH 2
 #define EAST 4
@@ -13,7 +17,7 @@
   #define X 13
   #define Y 13
 
-
+float getDistanceCM(int);
   entry maze[Y][X]; //maze matrix ¡¡Cuidado usa la Y y la X al reves ya que maze[0] es la FILA superior!!
   uint8_t headings[] = {1,2,4,8}; //N,S,E,W
 
@@ -67,9 +71,8 @@ uint8_t wallsAt(uint8_t posX, uint8_t posY){
   return ret;*/
 }
 
-boolean isWall(float d){
-    if( d <= 15 && d >=140)return true;
-    return false;
+inline bool isWall(float d){
+    return ( d <= 15 && d >=140);
 }
 
 uint8_t wallsAtSensors(){
