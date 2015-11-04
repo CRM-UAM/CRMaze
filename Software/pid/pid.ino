@@ -325,12 +325,12 @@ void setup() {
 
 
   // Use this code to calculate motorK_PWM and motorK_CMs
-  /*Lmotor_PWM(40);
+  Lmotor_PWM(40);
   Rmotor_PWM(40);
   delay(3000);
   Lmotor_PWM(0);
   Rmotor_PWM(0);
-  while(1);*/
+  while(1);
 
   // Use this to estimate motorDeadZonePWM
   //motor_calibration();
