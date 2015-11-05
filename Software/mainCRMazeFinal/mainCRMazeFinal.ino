@@ -14,6 +14,7 @@
 
 //Include custom data types
 #include "coord.h"
+#include "Order.h"
 #include "entry.h"
 
 
@@ -302,12 +303,12 @@ void turn(float yawGoal) {
     while(error <= -180) error += 360;
 
     if(error < 0) rotVel *= -1;
-    
+
     set_motor_speed(10, rotVel);
     while(abs(error) > 10) {
       float rotationalSpeed = readGyro();
       float dt = updateGyro(rotationalSpeed);
-      if((yaw-yawGoal)*error < 0) break; 
+      if((yaw-yawGoal)*error < 0) break;
       error = yaw-yawGoal;
     }
     set_motor_speed(0, 0);
@@ -464,7 +465,7 @@ uint8_t orient(Coord currCoord, uint8_t heading){
   uint8_t leastNextVal = 255;
   uint8_t leastDir = heading;
 
- 
+
   if((maze[currCoord.getY()][currCoord.getX()].walls & heading) != 0){
     Coord leastnextTemp = bearingCoord(currCoord, heading);
     if(checkBounds(leastnextTemp)){
@@ -620,9 +621,9 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
   StackList<Coord> entries;
 
   maze[currCoord.getY()][currCoord.getX()].walls=lastWall;
- 
+
   entries.push(currCoord);
- 
+
   for(uint8_t i=0; i<4; i++){
     uint8_t dir = headings[i];
     //If there's a wall in this dir
@@ -647,13 +648,13 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
          break;
       }
 
-     
+
       if(checkBounds(workingCoord)&&(!isEnd(workingCoord, desired,lenDesired))){
         entries.push(workingCoord);
       }
     }
   }
- 
+
 
   //While the entries stack isn't empty
   while(!entries.isEmpty()){
@@ -751,9 +752,9 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
         set_motor_speed(0, 0);
         boolean pF=isWallF(getDistanceCM(DIST_2_PIN));
         lastWall=readCurrent(nextHeading,pR,pF,pL);
-        
+
         delay(1000);
-        
+
          //pf("\tmovimiento: (%d,%d)->(%d,%d) [heading %d->%d]\n",currCoord.x,currCoord.y,nextCoord.x,nextCoord.y,heading,nextHeading);
         totalMove++;
       }
@@ -783,10 +784,11 @@ void instantiateReflood(){
 }
 
 
-long createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired, long maxLengthPath){
+long createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired,Order *path, long maxLengthPath){
   byte workingDir = EAST;
   int workingDist = 1;
   long len=0;
+  int i=0;
   while(!isEnd(workingCoord,desired,lenDesired) && len<(maxLengthPath+5)){
     byte optimalDir = orient(workingCoord, workingDir);
 
@@ -798,18 +800,23 @@ long createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired, long 
       //instruction nextInstruction = {workingDist, optimalDir};
       //instructions.push(nextInstruction);
       //pf("avanzar: %d celdas\n",workingDist);
+      if(path)path[i].setAvance(workingDist);
       switch(optimalDir){
         case 1:
           //Serial.println("tomar orientacion: NORTE");
+          if(path)path[i++].setHeading(NORTH);
           break;
         case 2:
           //Serial.println("tomar orientacion: SUR");
+          if(path)path[i++].setHeading(SOUTH);
           break;
         case 4:
           //Serial.println("tomar orientacion: ESTE");
+          if(path)path[i++].setHeading(EAST);
           break;
         case 8:
           //Serial.println("tomar orientacion: OESTE");
+          if(path)path[i++].setHeading(WEST);
           break;
       }
       //Reset the distance to one square and update the workingDir
@@ -822,11 +829,13 @@ long createSpeedQueue(Coord workingCoord, Coord desired[], int lenDesired, long 
     workingCoord = bearingCoord(workingCoord, optimalDir);
   }
   //pf("avanzar: %d celdas\n",workingDist);
-  //if(!isEnd(workingCoord,desired,lenDesired)) Serial.println("*RUTA NO VALIDA*");
+  if(path)path[i].setAvance(workingDist);
+  if(path)path[i].setHeading(0);
+  if(!isEnd(workingCoord,desired,lenDesired)) return -1;
   return len;
 }
 
-void reflood(Coord currCoord, Coord desired[], int lenDesired, long lenPath){
+void reflood(Coord currCoord, Coord desired[], int lenDesired, Order *path,long lenPath){
   //Refill the maze for most optimistic values, but now the maze has walls
   instantiateReflood();
 // printMaze();
@@ -835,7 +844,8 @@ void reflood(Coord currCoord, Coord desired[], int lenDesired, long lenPath){
 //  printMaze();
   //Now, the robot is still at the start, but the maze distance values have been updated with the walls discovered
   //So we follow the maze creating instructions
-  createSpeedQueue(currCoord,desired,lenDesired,lenPath);
+  if(createSpeedQueue(currCoord,desired,lenDesired,NULL,lenPath) > 0)
+        createSpeedQueue(currCoord,desired,lenDesired,path,lenPath);
   //We now have a queue of instructions.
 
 }
@@ -895,8 +905,8 @@ void setup() {
   delay(1000);*/
   // Use this to estimate motorDeadZonePWM
   //motor_calibration();
- 
-  
+
+
   delay(1000);
 
 }
@@ -925,10 +935,11 @@ void loop(){
   floodFill(desired,9, Coord(0,0),true);
   digitalWrite(GREEN_LED_PIN,HIGH);
   while(1);
- /* //Serial.println("**FIN FLOOD_FILL 1");
+ //Serial.println("**FIN FLOOD_FILL 1");
   //pf("movimientos: %d***\n",totalMove);
 //  printMaze();
-  long lenPath=createSpeedQueue(Coord(0,0),desired,9,1000);
+  Order path[70];
+  long lenPath=createSpeedQueue(Coord(0,0),desired,9,path,70);
 
   //Serial.println("***VOLVIENDO AL ORIGEN****");
   Coord returnCoord3[] = {Coord(0,0)};
@@ -940,15 +951,12 @@ void loop(){
 
 
   //pf("**SOLUCION (Realizados %d mov para rastrear):\n");
-  reflood(Coord(0,0),desired,9,lenPath);
+  reflood(Coord(0,0),desired,9,path,lenPath);
   //Serial.println("*****FIN FLOOD_FILL Reflood****");
   //printMaze();
   //Serial.println("****END PROGRAM*******");
 
-  while(1){
-    digitalWrite(13,HIGH);
-    delay(10000);
-  }
-  */
+
+
 }
 
