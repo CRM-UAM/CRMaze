@@ -9,7 +9,10 @@
 
 
 inline bool isWall(float d){
-    return ( d <= 20);
+    return ( d <= 17);
+}
+inline bool isWallF(float d){
+    return ( d <= 28);
 }
 
 #define ir_K 4419.36 // Linearization of the sensor response
@@ -24,7 +27,7 @@ float getDistanceCM(int pin) {
 
 uint8_t wallsAtSensors(uint8_t headingRobot){
   boolean pR=isWall(getDistanceCM(DIST_1_PIN));
-  boolean pF=isWall(getDistanceCM(DIST_2_PIN));
+  boolean pF=isWallF(getDistanceCM(DIST_2_PIN));
   boolean pL=isWall(getDistanceCM(DIST_3_PIN));
   uint8_t ret=0;
   switch(headingRobot){
@@ -73,9 +76,9 @@ void loop(){
     Serial.println("ORIENTACION NORTE");
     Serial.println(wallsAtSensors(NORTH));
     delay(1000);
-    /*Serial.println("GIRO AL ESTE");
+    Serial.println("GIRO AL ESTE");
     Serial.println(wallsAtSensors(EAST));
-    delay(1000);
+    /*delay(1000);
     Serial.println("GIRO AL OESTE");
     Serial.println(wallsAtSensors(WEST));
     delay(1000);

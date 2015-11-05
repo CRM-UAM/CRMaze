@@ -10,10 +10,10 @@
 //   MPU-6050 Short Example Sketch by Arduino User JohnChi
 
 #include <StackList.h>
-#include <stdarg.h>
+//#include <stdarg.h>
 
 //Include custom data types
-#include "Coord.h"
+#include "coord.h"
 #include "entry.h"
 
 
@@ -294,7 +294,22 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
 }
 
 void turn(float yawGoal) {
-    motorPIDcontroller(yaw+yawGoal, true, 0, 0, false, 0, 0, false);
+    //motorPIDcontroller(yaw+yawGoal, true, 0, 0, false, 0, 0, false);
+    float rotVel = 30;
+    yawGoal += yaw;
+    float error = yaw-yawGoal;
+    while(error > 180) error -= 360;
+    while(error <= -180) error += 360;
+
+    if(error < 0) rotVel *= -1;
+    
+    set_motor_speed(10, rotVel);
+    while(abs(error) > 10) {
+      float rotationalSpeed = readGyro();
+      float dt = updateGyro(rotationalSpeed);
+      if((yaw-yawGoal)*error < 0) break; 
+      error = yaw-yawGoal;
+    }
     set_motor_speed(0, 0);
     delay(1000);
 }
@@ -325,24 +340,6 @@ float getDistanceCM(int);
 
 
 
-byte mazeSol[13][13]={
-{4,12,10,4,12,12,12,14,10,6,10,4,10},
-{4,10,5,10,6,12,12,9,5,9,5,12,11},
-{6,13,10,3,3,4,14,14,12,8,6,12,9},
-{3,6,9,5,9,6,9,1,6,12,9,6,10},
-{3,5,12,8,6,13,12,12,9,6,8,3,3},
-{7,12,10,6,9,6,14,10,2,7,12,9,3},
-{1,6,11,5,10,7,15,11,5,9,6,12,11},
-{6,9,1,6,9,5,15,9,6,12,9,6,9},
-{5,10,6,9,4,14,13,10,7,10,4,11,2},
-{6,11,3,6,10,5,10,5,9,5,10,3,3},
-{3,1,5,9,3,2,7,12,12,8,3,3,3},
-{7,14,8,6,9,5,9,6,12,12,9,5,11},
-{1,5,12,13,12,12,12,9,4,12,12,12,9}
-}; //matriz con posibles paredes en los indices pares y celdas en los impares. 0 si no hay pared 1 si si.
-
-
-
 
 /*void pf(char *fmt, ... ){
         char buf[128]; // resulting string limited to 128 chars
@@ -352,108 +349,6 @@ byte mazeSol[13][13]={
         va_end (args);
         //Serial.print(buf);
 }*/
-
-uint8_t wallsAt(uint8_t posX, uint8_t posY){
-  return mazeSol[posY][posX];
-  /*uint8_t ret=0;
-  uint8_t nX=posX*2+1;
-  uint8_t nY=posY*2+1;
-  //W=8,E=4,S=2,N=1
-  if(!mazeSol[nY-1][nX])ret+=1; //no hay pared al norte
-  if(!mazeSol[nY+1][nX])ret+=2; //no hay pared al sur
-  if(!mazeSol[nY][nX-1])ret+=8; //no hay pared al oeste
-  if(!mazeSol[nY][nX+1])ret+=4; //no hay pared al este
-  //pf("DEBUG WALLSAT (%d,%d)=%d\n",posX,posY,ret);
-  return ret;*/
-}
-
-inline bool isWall(float d){
-    return ( d <= 15 && d >=140);
-}
-
-uint8_t wallsAtSensors(){
-  boolean pF=isWall(getDistanceCM(DIST_1_PIN));
-  boolean pR=isWall(getDistanceCM(DIST_1_PIN));
-  boolean pL=isWall(getDistanceCM(DIST_1_PIN));
-  uint8_t ret=0;
-  switch(headingRobot){
-    case NORTH:
-        if(!pF)ret+=NORTH;
-        if(!pR)ret+=EAST;
-        if(!pL)ret+=WEST;
-        return ret+SOUTH; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
-    case EAST:
-        if(!pF)ret+=EAST;
-        if(!pR)ret+=SOUTH;
-        if(!pL)ret+=NORTH;
-        return ret+WEST; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
-    case SOUTH:
-        if(!pF)ret+=SOUTH;
-        if(!pR)ret+=WEST;
-        if(!pL)ret+=EAST;
-        return ret+NORTH; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
-    case WEST:
-        if(!pF)ret+=WEST;
-        if(!pR)ret+=NORTH;
-        if(!pL)ret+=SOUTH;
-        return ret+EAST; //devuelvo las paredes detectadas mas la ausencia de pared por donde he venido
-    default:
-        return -1;
-  }
-}
-
-/*
-Imprime el esado actual de maze con las sitancias en las celdas
-+----+
-| 9  |
-+----+
-*/
-/*void printMaze(){
-  uint8_t i,j;
-  for(i=0;i<X;i++)
-    pf("+%.3d+",i);
-  Serial.println("");
-  for (j=0;j<Y;j++){
-    for(i=0;i<X;i++){
-      if(!(maze[j][i].walls & NORTH))
-        Serial.print("+---+");
-      else
-        Serial.print("+   +");
-    }
-    Serial.println("");
-    for(i=0;i<X;i++){
-      if(!(maze[j][i].walls & WEST))
-        Serial.print("|");
-      else
-        Serial.print(" ");
-      if (maze[j][i].distance/100) pf("%d",maze[j][i].distance);
-      else
-        if(i==posXrobot && j==posYrobot)
-          pf("^%d",maze[j][i].distance);
-        else
-          pf(" %d",maze[j][i].distance);
-        if(maze[j][i].distance < 10) pf(" ");
-      if(!(maze[j][i].walls & EAST))
-        Serial.print("|");
-      else
-        Serial.print(" ");
-    }
-    pf(" -%d\n",j);
-    for(i=0;i<X;i++){
-      if(!(maze[j][i].walls & SOUTH))
-        Serial.print("+---+");
-      else
-        Serial.print("+   +");
-    }
-    Serial.println("");
-
-  }
-}*/
-
-
-
-
-
 
 void instantiate(){
   for(uint8_t j = 0; j<Y; j++){
@@ -569,19 +464,14 @@ uint8_t orient(Coord currCoord, uint8_t heading){
   uint8_t leastNextVal = 255;
   uint8_t leastDir = heading;
 
-  //If there is a bitwise equivalence between the current heading and the cell's value, then the next cell is accessible
-  //pf("DEBUG orient if w(%d,%d)=%d(=%d) h=%d\n",currCoord.x,currCoord.y,maze[currCoord.y][currCoord.x].walls,wallsAt(currCoord.x,currCoord.y), heading);
+ 
   if((maze[currCoord.getY()][currCoord.getX()].walls & heading) != 0){
-    //Define a coordinate for the next cell based onthis heading and set the leastNextVal t its value
-    //pf("\tDEBUG orient test1 (%d,%d-%d)->", currCoord.getX(),currCoord.getY(),heading);
     Coord leastnextTemp = bearingCoord(currCoord, heading);
-    //pf("(%d,%d)\n",leastnextTemp.getX(),leastnextTemp.getY());
     if(checkBounds(leastnextTemp)){
       leastNext = leastnextTemp;
       leastNextVal = maze[leastNext.getY()][leastNext.getX()].distance;
     }
   }
-  //pf("DEBUG orient partial result (%d,%d)=%d\n",leastNext.getX(),leastNext.getY(),leastNextVal);
   for(uint8_t i=0; i<4; i++){
     uint8_t dir = headings[i];
     //if this dir is accessible
@@ -597,7 +487,6 @@ uint8_t orient(Coord currCoord, uint8_t heading){
           //update the value of leastnext to this dir
           leastNext = dirCoord;
           leastDir = dir;
-          //pf("DEBUG orient actualizar minimo to h=%d, (%d,%d-%d)\n",leastDir,leastNext.getX(),leastNext.y,leastNextVal);
         }
       }
     }
@@ -617,8 +506,6 @@ boolean checkBounds(Coord c){
 INPUT: c
 OUTPUT: An integer that is the least neighbor
 */
-
-
 uint8_t checkNeighs(Coord c){
   uint8_t minVal =  255;
 
@@ -681,10 +568,7 @@ Using orientation and walls, this information is mapped to a map integer in the 
 
 
 uint8_t lastWall=4;
-uint8_t readCurrent(uint8_t headingRobot){
-  boolean pR=isWall(getDistanceCM(DIST_1_PIN));
-  boolean pF=isWall(getDistanceCM(DIST_2_PIN));
-  boolean pL=isWall(getDistanceCM(DIST_3_PIN));
+uint8_t readCurrent(uint8_t headingRobot, bool pR, bool pF, bool pL){
   uint8_t ret=0;
   switch(headingRobot){
     case NORTH:
@@ -713,9 +597,7 @@ uint8_t readCurrent(uint8_t headingRobot){
   }
 }
 
-uint8_t readAhead(){
-  return 0;
-}
+
 
 
 /*
@@ -738,14 +620,13 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
   StackList<Coord> entries;
 
   maze[currCoord.getY()][currCoord.getX()].walls=lastWall;
+ 
   entries.push(currCoord);
-  //printMaze();
-  //pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
+ 
   for(uint8_t i=0; i<4; i++){
     uint8_t dir = headings[i];
     //If there's a wall in this dir
     if((maze[currCoord.getY()][currCoord.getX()].walls & dir) == 0){
-      //pf("direccion %d con paredes=%d\n",dir,maze[currCoord.getY()][currCoord.getX()].walls);
       Coord workingCoord = Coord(currCoord.getX(),currCoord.getY());
       switch(dir){
         case 1:
@@ -766,26 +647,31 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
          break;
       }
 
-      //If the workingEntry is a valid entry and not a dead end, push it onto the stack
+     
       if(checkBounds(workingCoord)&&(!isEnd(workingCoord, desired,lenDesired))){
-       // pf("DEBUG\t a la cola-> (%d,%d)\n",workingCoord.x,workingCoord.y);
         entries.push(workingCoord);
-        //pf("push (%d,%d)\t",workingCoord.getX(),workingCoord.getY());
       }
     }
   }
-  //pf("DEBUG FFUpdate (%d,%d)\tNumero en la cola: %d\t",currCoord.getX(),currCoord.getY(),entries.count());
+ 
 
   //While the entries stack isn't empty
-
   while(!entries.isEmpty()){
     //pf("pila size: %d\n",entries.count());
+    /*digitalWrite(RED_LED_PIN, HIGH);
+    for(int i=0; i<entries.count(); i++) {
+      digitalWrite(GREEN_LED_PIN, HIGH);
+      delay(200);
+      digitalWrite(GREEN_LED_PIN, LOW);
+      delay(200);
+    }
+    delay(1000);
+    digitalWrite(RED_LED_PIN, LOW);
+    */
     //Pop an entry from the stack
     Coord workingEntry = entries.pop();
     uint8_t neighCheck = checkNeighs(workingEntry);
-    //pf("DEBUG\t vecino minimo de (%d,%d) es: %d\n",workingEntry.getX(),workingEntry.getY(),neighCheck);
     //If the least neighbor of the working entry is not one less than the value of the working entry
-    //if(workingEntry.getX()==4 && workingEntry.getY()==6)pf("DEBUG ALERTA (4,6): vecinominimo=%d isEnd=%d\n",neighCheck,isEnd(workingEntry,desired,lenDesired));
     if(neighCheck+1!=maze[workingEntry.getY()][workingEntry.getX()].distance && !isEnd(workingEntry,desired,lenDesired)){
       maze[workingEntry.getY()][workingEntry.getX()].distance=neighCheck+1;
       for(uint8_t i=0;i<4;i++){
@@ -802,6 +688,14 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
     }
   }
 }
+
+inline bool isWall(float d){
+    return ( d <= 17);
+}
+inline bool isWallF(float d){
+    return ( d <= 17);
+}
+
 
 void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving){
 
@@ -824,7 +718,6 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
       Coord nextCoord = bearingCoord(currCoord, nextHeading);
       //TODO: ADD MOVING INSTRUCTIONS HERE
       if(isMoving){
-        digitalWrite(GREEN_LED_PIN,HIGH);
          if(nextHeading!=heading){
             switch(heading){
                 case NORTH:
@@ -851,10 +744,16 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
                         break;
 
             }
-            lastWall=readCurrent(nextHeading);
-            motorPIDcontroller(0, false, 28, 11, true, 0, 16, true);
-            delay(1000);
          }
+        boolean pR=isWall(getDistanceCM(DIST_1_PIN));
+        boolean pL=isWall(getDistanceCM(DIST_3_PIN));
+        motorPIDcontroller(0, false, 28, 11, true, 0, 14, true);
+        set_motor_speed(0, 0);
+        boolean pF=isWallF(getDistanceCM(DIST_2_PIN));
+        lastWall=readCurrent(nextHeading,pR,pF,pL);
+        
+        delay(1000);
+        
          //pf("\tmovimiento: (%d,%d)->(%d,%d) [heading %d->%d]\n",currCoord.x,currCoord.y,nextCoord.x,nextCoord.y,heading,nextHeading);
         totalMove++;
       }
@@ -996,6 +895,10 @@ void setup() {
   delay(1000);*/
   // Use this to estimate motorDeadZonePWM
   //motor_calibration();
+ 
+  
+  delay(1000);
+
 }
 
 
@@ -1020,7 +923,9 @@ void loop(){
   Coord desired[] = {Coord(5,5),Coord(5,6),Coord(5,7),Coord(6,5),Coord(6,6),Coord(6,7),Coord(7,5),Coord(7,6),Coord(7,7)};
 
   floodFill(desired,9, Coord(0,0),true);
-  //Serial.println("**FIN FLOOD_FILL 1");
+  digitalWrite(GREEN_LED_PIN,HIGH);
+  while(1);
+ /* //Serial.println("**FIN FLOOD_FILL 1");
   //pf("movimientos: %d***\n",totalMove);
 //  printMaze();
   long lenPath=createSpeedQueue(Coord(0,0),desired,9,1000);
@@ -1044,5 +949,6 @@ void loop(){
     digitalWrite(13,HIGH);
     delay(10000);
   }
+  */
 }
 

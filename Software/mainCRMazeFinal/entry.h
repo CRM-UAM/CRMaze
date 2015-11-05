@@ -1,3 +1,11 @@
+ /*Integer representation of heading
+  * 1 = N
+  * 4 = E
+  * 2 = S
+  * 8 = W
+  */
+
+
 struct entry
 {
 	uint8_t distance;
