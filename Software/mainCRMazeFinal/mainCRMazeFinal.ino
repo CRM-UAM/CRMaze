@@ -979,26 +979,23 @@ void loop(){
 
   floodFill(desired,9, Coord(0,0),true);
   digitalWrite(GREEN_LED_PIN,HIGH);
-  while(1);
+  //while(1);
  //Serial.println("**FIN FLOOD_FILL 1");
-  //pf("movimientos: %d***\n",totalMove);
-//  printMaze();
   Order path[70];
   long lenPath=createSpeedQueue(Coord(0,0),desired,9,path,70);
-
-  //Serial.println("***VOLVIENDO AL ORIGEN****");
+  delay(3000);
+  digitalWrite(GREEN_LED_PIN,LOW);//Serial.println("***VOLVIENDO AL ORIGEN****");
   Coord returnCoord3[] = {Coord(0,0)};
   resetToCoord(returnCoord3[0]);
   floodFill(returnCoord3,1, Coord(posXrobot,posYrobot),true);
   //Serial.println("*****FIN FLOOD_FILL Retorno*******");
-//  printMaze();
 
 
 
-  //pf("**SOLUCION (Realizados %d mov para rastrear):\n");
-  reflood(Coord(0,0),desired,9,path,lenPath);
-  //Serial.println("*****FIN FLOOD_FILL Reflood****");
-  //printMaze();
+
+
+  reflood(Coord(0,0),desired,9,path,lenPath);//Serial.println("*****FIN FLOOD_FILL Reflood****");
+
   //Serial.println("****END PROGRAM*******");
 
   while(1){
