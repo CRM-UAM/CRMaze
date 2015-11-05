@@ -926,6 +926,44 @@ void setup() {
   delay(1000);
 }*/
 
+void run_path(Order *path,int delayStop){
+    int i=0;
+    while(path[i].getHeading()!=0 && !button_is_pressed()){
+        for(int j=0;j<path[i].getAvance();j++){
+            motorPIDcontroller(0, false, 28, 11, true, 0, 14, true);
+            set_motor_speed(0, 0);
+            if(button_is_pressed())return;
+            delay(delayStop);
+        }
+        switch(heading){
+            case NORTH:
+                if(path[i].getHeading()==EAST)turn(-90);
+                else if(path[i].getHeading()==WEST)turn(90);
+                else if(path[i].getHeading()==SOUTH)turn(180);
+                break;
+            case SOUTH:
+                if(path[i].getHeading()==EAST)turn(90);
+                else if(path[i].getHeading()==WEST)turn(-90);
+                else if(path[i].getHeading()==NORTH)turn(180);
+                break;
+            case EAST:
+                if(path[i].getHeading()==SOUTH)turn(-90);
+                else if(path[i].getHeading()==NORTH)turn(90);
+                else if(path[i].getHeading()==WEST)turn(180);
+                break;
+            case WEST:
+                if(path[i].getHeading()==NORTH)turn(-90);
+                else if(path[i].getHeading()==SOUTH)turn(90);
+                else if(path[i].getHeading()==EAST)turn(180);
+                break;
+            default:
+                break;
+
+        }
+        heading=path[i].getHeading();
+    }
+}
+
 
 void loop(){
 
@@ -951,10 +989,19 @@ void loop(){
 
 
   //pf("**SOLUCION (Realizados %d mov para rastrear):\n");
-  reflood(Coord(0,0),desired,9,path,lenPath);
+  lenPath=reflood(Coord(0,0),desired,9,path,lenPath);
   //Serial.println("*****FIN FLOOD_FILL Reflood****");
   //printMaze();
   //Serial.println("****END PROGRAM*******");
+
+  while(1){
+    digitalWrite(GREEN_LED_PIN,HIGH);
+    while(!button_is_pressed());
+    digitalWrite(GREEN_LED_PIN,LOW);
+    delay(1000);
+    run_path(path,200);
+    delay(2000);
+  }
 
 
 
