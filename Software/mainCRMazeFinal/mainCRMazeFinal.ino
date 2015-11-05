@@ -927,8 +927,9 @@ void setup() {
 }*/
 
 void run_path(Order *path,int delayStop){
+    int heading=EAST;
     int i=0;
-    while(path[i].getHeading()!=0 && !button_is_pressed()){
+    for(;path[i].getHeading()!=0 && !button_is_pressed();i++){
         for(int j=0;j<path[i].getAvance();j++){
             motorPIDcontroller(0, false, 28, 11, true, 0, 14, true);
             set_motor_speed(0, 0);
@@ -962,6 +963,12 @@ void run_path(Order *path,int delayStop){
         }
         heading=path[i].getHeading();
     }
+    for(int j=0;j<path[i].getAvance();j++){
+        motorPIDcontroller(0, false, 28, 11, true, 0, 14, true);
+        set_motor_speed(0, 0);
+        if(button_is_pressed())return;
+        delay(delayStop);
+    }
 }
 
 
@@ -989,7 +996,7 @@ void loop(){
 
 
   //pf("**SOLUCION (Realizados %d mov para rastrear):\n");
-  lenPath=reflood(Coord(0,0),desired,9,path,lenPath);
+  reflood(Coord(0,0),desired,9,path,lenPath);
   //Serial.println("*****FIN FLOOD_FILL Reflood****");
   //printMaze();
   //Serial.println("****END PROGRAM*******");
