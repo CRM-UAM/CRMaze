@@ -9,11 +9,11 @@
 
 
 inline bool isWall(float d){
-    return ( d <= 20);
+    return ( d <= 15 && d >=140);
 }
 
-#define ir_K 4419.36 // Linearization of the sensor response
-#define ir_C 32.736
+#define ir_K = 4419.36 // Linearization of the sensor response
+#define ir_C = 32.736
 float getDistanceCM(int pin) {
   float measurement = analogRead(pin);
   if(measurement <= ir_C) return 150;
@@ -23,9 +23,9 @@ float getDistanceCM(int pin) {
 }
 
 uint8_t wallsAtSensors(uint8_t headingRobot){
+  boolean pF=isWall(getDistanceCM(DIST_1_PIN));
   boolean pR=isWall(getDistanceCM(DIST_1_PIN));
-  boolean pF=isWall(getDistanceCM(DIST_2_PIN));
-  boolean pL=isWall(getDistanceCM(DIST_3_PIN));
+  boolean pL=isWall(getDistanceCM(DIST_1_PIN));
   uint8_t ret=0;
   switch(headingRobot){
     case NORTH:
@@ -62,24 +62,16 @@ void setup(){
 }
 
 void loop(){
- 
-    Serial.print(getDistanceCM(DIST_1_PIN));
-    Serial.print("  ");
-    Serial.print(getDistanceCM(DIST_2_PIN));
-    Serial.print("  ");
-    Serial.println(getDistanceCM(DIST_3_PIN));
-    //delay(1000);
-  
-    Serial.println("ORIENTACION NORTE");
-    Serial.println(wallsAtSensors(NORTH));
+    Serial.println("ORIENTACION NORTE")
+    Serial.println(wallsAtSensors(NORTH))
     delay(1000);
-    /*Serial.println("GIRO AL ESTE");
-    Serial.println(wallsAtSensors(EAST));
+    Serial.println("GIRO AL ESTE");
+    Serial.println(wallsAtSensors(EAST))
     delay(1000);
     Serial.println("GIRO AL OESTE");
-    Serial.println(wallsAtSensors(WEST));
+    Serial.println(wallsAtSensors(WEST))
     delay(1000);
     Serial.println("GIRO AL SUR");
-    Serial.println(wallsAtSensors(SOUTH)),
-    delay(1000);*/
+    Serial.println(wallsAtSensors(SOUTH))
+    delay(1000);
 }

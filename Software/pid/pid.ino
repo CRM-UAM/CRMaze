@@ -136,8 +136,8 @@ void Lmotor_PWM(int16_t vel) {
     analogWrite(M1A_PIN, -vel);
     analogWrite(M2A_PIN, 0);
   } else {
-    analogWrite(M1A_PIN, 0);
-    analogWrite(M2A_PIN, 0);
+    analogWrite(M1A_PIN, 255);
+    analogWrite(M2A_PIN, 255);
   }
 }
 
@@ -150,15 +150,15 @@ void Rmotor_PWM(int16_t vel) {
     analogWrite(M3A_PIN, -vel);
     analogWrite(M4A_PIN, 0);
   } else {
-    analogWrite(M3A_PIN, 0);
-    analogWrite(M4A_PIN, 0);
+    analogWrite(M3A_PIN, 255);
+    analogWrite(M4A_PIN, 255);
   }
 }
 
 // Calibrated motor functions (cm/s)
 #define motorDeadZonePWM 20
-#define motorK_PWM       40
-#define motorK_CMs       49.5
+#define motorK_PWM       50
+#define motorK_CMs       28.
 int16_t map_vel_pwm(float vel) {
   int16_t res = 0;
   if(vel > 0)
@@ -324,21 +324,21 @@ void setup() {
 
 
   // Use this code to calculate motorK_PWM and motorK_CMs
-  /*Lmotor_PWM(40);
-  Rmotor_PWM(40);
-  delay(3000);
+  /*Lmotor_PWM(50);
+  Rmotor_PWM(50);
+  delay(500);
   Lmotor_PWM(0);
   Rmotor_PWM(0);
 
   while(!button_is_pressed());
   digitalWrite(GREEN_LED_PIN, HIGH);
-  delay(1000);
+  delay(1000);*/
 
-  set_motor_speed(50, 0); // 50cm/s
-  delay(2000); // 2s
+  /*set_motor_speed(28, 0);
+  delay(500);
   set_motor_speed(0, 0);
-  while(1);*/
-
+  while(!button_is_pressed());
+  delay(1000);*/
   // Use this to estimate motorDeadZonePWM
   //motor_calibration();
 }
@@ -370,8 +370,6 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
     
     float distR = getDistanceCM(DIST_1_PIN);
     float distL = getDistanceCM(DIST_3_PIN);
-    yawGoal += distR-20;
-    //else if(distL < 35) yawGoal -= distL-20;
 
     if(button_is_pressed()) {
       set_motor_speed(0, 0);
@@ -381,8 +379,12 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
     float targetYaw = yawGoal;
     if(term_distanceReached) targetYaw = mapf(distance_integral,0,distanceGoal,yawGoal,yawEnd);
     float error = 0;//2*(distR-15);//(yaw-targetYaw);
-    if(distR < 30) error = 2*(distR-15);
-    if(distL < 30) error = -2*(distL-15);
+    if(term_yawReached)
+      error = (yaw-targetYaw);
+    else {
+      if(distR < 20) error = 2*(distR-12);
+      if(distL < 20 && distL < distR) error = -2*(distL-12);
+    }
     while(error > 180) error -= 360;
     while(error <= -180) error += 360;
     
@@ -400,6 +402,14 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
     } else first_iteration = false;
   
     if(term_yawReached && abs(error)+abs(error_integral)+abs(error_derivative) < 10) return 1;
+    if(term_IRdistReached) {
+        float dist = getDistanceCM(DIST_2_PIN);
+        if(c_speed > 0) {
+            if(dist < IRdistGoal_cm) return 2;
+        } else {
+            if(dist > IRdistGoal_cm) return 2;
+        }
+    }
     
     float v = kp*error + ki*error_integral + kd*error_derivative;
     
@@ -423,10 +433,14 @@ void pointToAngle(float yawGoal) {
 
 
 void loop() {
-  motorPIDcontroller(yawGoal, false, 50, 0, false, 0, 0, false);
-  pointToAngle(45);
-  delay(1000);
-  pointToAngle(-45);
+  for(int i=0; i<6; i++) {
+    motorPIDcontroller(yawGoal, false, 28, 11, true, 0, 16, true);
+    set_motor_speed(0, 0);
+    delay(1000);
+  }
+  motorPIDcontroller(yaw+90, true, 0, 0, false, 0, 0, false);
+  set_motor_speed(0, 0);
+  //while(!button_is_pressed());
   delay(1000);
 }
 
