@@ -250,8 +250,8 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
     if(term_yawReached)
       error = (yaw-targetYaw);
     else {
-      if(distR < 20) error = 2*(distR-12);
-      if(distL < 20 && distL < distR) error = -2*(distL-12);
+      if(distR < 20) error = (distR-12);
+      if(distL < 20 && distL < distR) error = -(distL-12);
     }
     while(error > 180) error -= 360;
     while(error <= -180) error += 360;
@@ -690,13 +690,6 @@ void floodFillUpdate(Coord currCoord, Coord desired[], int lenDesired){
   }
 }
 
-inline bool isWall(float d){
-    return ( d <= 17);
-}
-inline bool isWallF(float d){
-    return ( d <= 17);
-}
-
 
 void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving){
 
@@ -746,11 +739,24 @@ void floodFill(Coord desired[],int lenDesired, Coord currCoord, boolean isMoving
 
             }
          }
-        boolean pR=isWall(getDistanceCM(DIST_1_PIN));
-        boolean pL=isWall(getDistanceCM(DIST_3_PIN));
-        motorPIDcontroller(0, false, 28, 11, true, 0, 14, true);
+        motorPIDcontroller(0, false, 28, 11, true, 0, 17./2., true);
         set_motor_speed(0, 0);
-        boolean pF=isWallF(getDistanceCM(DIST_2_PIN));
+        delay(2000);
+        boolean pR = (14 >= getDistanceCM(DIST_1_PIN));
+        boolean pF = (25 >= getDistanceCM(DIST_2_PIN));
+        boolean pL = (17 >= getDistanceCM(DIST_3_PIN));
+        digitalWrite(RED_LED_PIN, HIGH);
+        for(int i=0; i<pR+pF+pL; i++) {
+          digitalWrite(GREEN_LED_PIN, HIGH);
+          delay(200);
+          digitalWrite(GREEN_LED_PIN, LOW);
+          delay(200);
+        }
+        delay(1000);
+        digitalWrite(RED_LED_PIN, LOW);
+        motorPIDcontroller(0, false, 28, 11, true, 0, 17./2., true);
+        set_motor_speed(0, 0);
+
         lastWall=readCurrent(nextHeading,pR,pF,pL);
 
         delay(1000);
