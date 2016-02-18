@@ -169,6 +169,7 @@ void readIMU(int16_t *AcY, int16_t *GyZ) {
 
 int iter = 0;
 float linear_motion_big = 0;
+unsigned long contTs = 0;
 
 void loop() {
   readIMU(&AcY, &GyZ);
@@ -181,7 +182,7 @@ void loop() {
     GyZ_integral += (GyZ-GyZoffset)*dt;
   }
   
-  float linear_motion = linear_motion_big*16./32768.; // +-16G sensitivity; +-2^15 full scale
+  float linear_motion = 0;//linear_motion_big*16./32768.; // +-16G sensitivity; +-2^15 full scale
   float rotation = GyZ_integral*2000./32768.; // +-2000 deg/s sensitivity; +-2^15 full scale
   
   int rot_error = max(min(round(255.*rotation/90.),255),-255);
@@ -189,7 +190,11 @@ void loop() {
   
   //Serial.println(AcY);
 
-
+  if( (contTs+5000) < millis() ){
+    contTs = millis();
+    digitalWrite(LED_GREEN_PIN, HIGH);
+    GyZ_integral += (90./2000.)*32768.;
+  }
   
   if((iter % 10) == 0) {
     if(1000*linear_motion > 20) {

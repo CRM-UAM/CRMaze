@@ -163,8 +163,8 @@ void Rmotor_PWM(int16_t vel) {
 
 // Calibrated motor functions (cm/s)
 #define motorDeadZonePWM 20
-#define motorK_PWM       50
-#define motorK_CMs       28.
+#define motorK_PWM       100//50
+#define motorK_CMs       30//28.
 int16_t map_vel_pwm(float vel) {
   int16_t res = 0;
   if(vel > 0)
@@ -389,7 +389,7 @@ void setup() {
 
 bool invierte = false;
 void loop() {
-  int ret = motorPIDcontroller(0, false, 28, 12, true, 0, 0, false);
+  /*int ret = motorPIDcontroller(0, false, 28, 12, true, 0, 0, false);
   //delay(500);
   invierte = false;
   if(ret == 8) {
@@ -412,7 +412,18 @@ void loop() {
   if(ret == 8) {
     set_motor_speed(30, 0);
     delay(300);
+  }*/
+  int i=0;
+  for(i=0;i<30;i+=5){
+    set_motor_speed(i, 0);
+    delay(2000);
+    set_motor_speed(0, 0);
+    delay(500);
+    turn(90);
+    set_motor_speed(0, 0);
+    delay(500);
   }
+  delay(5000);
 }
 
 
