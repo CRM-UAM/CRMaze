@@ -23,7 +23,7 @@ Más fotos
 =
 
 ![](pieza_suelta.png)
-
+![](columna_suelta.png)
 ![](base_impresion.jpg)  
 *El diseño permite imprimir muchas piezas juntas*  
 
