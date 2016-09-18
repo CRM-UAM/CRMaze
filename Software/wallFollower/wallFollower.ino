@@ -78,7 +78,7 @@ int16_t readGyro_raw() {
   Wire.beginTransmission(MPU);
   Wire.write(0x47);  // starting with register 0x47 (GYRO_ZOUT_H)
   Wire.endTransmission(false);
-  Wire.requestFrom(MPU,2,true);  // request a total of 12 registers
+  Wire.requestFrom(MPU,2,true);  // request a total of 2 registers
   return Wire.read()<<8 | Wire.read();  // 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
 }
 
@@ -90,7 +90,7 @@ float readGyro() {
 float updateGyro(float rotationalSpeed) {
   unsigned long ts = micros();
   float dt = ((float)(ts-prev_ts))/1000000.;
-  if(dt > 0 && dt < 0.5) { // Ensures the integration only over sensible sampling intervals
+  if(dt > 0.001 && dt < 0.5) { // Ensures the integration only over sensible sampling intervals
     yaw += rotationalSpeed*dt;
   }
   prev_ts = ts;
@@ -111,9 +111,9 @@ float updateGyro(float rotationalSpeed) {
 void playNote(int frequency, int length) {
     if(frequency <= 0) frequency = DO;
     if(length <= 0) length = 100;
-    //tone(BUZZER_PIN,frequency);
+    tone(BUZZER_PIN,frequency);
     delay(length);
-    //noTone(BUZZER_PIN);
+    noTone(BUZZER_PIN);
     delay(100);
 }
 
@@ -142,8 +142,8 @@ void Lmotor_PWM(int16_t vel) {
     analogWrite(M1A_PIN, -vel);
     analogWrite(M2A_PIN, 0);
   } else {
-    analogWrite(M1A_PIN, 255);
-    analogWrite(M2A_PIN, 255);
+    analogWrite(M1A_PIN, 0);
+    analogWrite(M2A_PIN, 0);
   }
 }
 
@@ -156,15 +156,15 @@ void Rmotor_PWM(int16_t vel) {
     analogWrite(M3A_PIN, -vel);
     analogWrite(M4A_PIN, 0);
   } else {
-    analogWrite(M3A_PIN, 255);
-    analogWrite(M4A_PIN, 255);
+    analogWrite(M3A_PIN, 0);
+    analogWrite(M4A_PIN, 0);
   }
 }
 
 // Calibrated motor functions (cm/s)
 #define motorDeadZonePWM 20
-#define motorK_PWM       100//50
-#define motorK_CMs       30//28.
+#define motorK_PWM       100
+#define motorK_CMs       40
 int16_t map_vel_pwm(float vel) {
   int16_t res = 0;
   if(vel > 0)
@@ -182,11 +182,6 @@ void set_motor_speed(float velocity, float offset) {
 
 
 // --- BUTTON ---
-void init_button_pin() {
-  pinMode(BUTTON_PIN,INPUT);
-  digitalWrite(BUTTON_PIN, HIGH); // Enable internal pull-up resistor
-}
-
 bool button_is_pressed() {
   return !digitalRead(BUTTON_PIN);
 }
@@ -290,7 +285,7 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
       saturated = false;
     }
 
-    set_motor_speed(c_speed, v);
+    set_motor_speed(c_speed, min(max(v,-10),10));
 
     prev_error = error;
   }
@@ -298,7 +293,7 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
 
 void turn(float yawGoal) {
     motorPIDcontroller(yaw+yawGoal, true, 0, 0, false, 0, 0, false);
-    /*float rotVel = 60;
+    /*float rotVel = 10;
     yawGoal += yaw;
     float error = yaw-yawGoal;
     while(error > 180) error -= 360;
@@ -306,7 +301,7 @@ void turn(float yawGoal) {
 
     if(error < 0) rotVel *= -1;
 
-    set_motor_speed(20, rotVel);
+    set_motor_speed(1, rotVel);
     while(abs(error) > 10) {
       float rotationalSpeed = readGyro();
       float dt = updateGyro(rotationalSpeed);
@@ -327,11 +322,11 @@ void turn(float yawGoal) {
 void setup() {
   delay(400);
   init_motor_pins();
-  init_button_pin();
+  pinMode(BUTTON_PIN,INPUT_PULLUP);
   pinMode(RED_LED_PIN, OUTPUT);
   pinMode(GREEN_LED_PIN, OUTPUT);
 
-  //Serial.begin(115200);
+  Serial.begin(115200);
 
 
   // Low battery notification (program will stop here if a minimum of 7V are not available)
@@ -363,15 +358,15 @@ void setup() {
 
 
   // Use this code to calculate motorK_PWM and motorK_CMs
-  /*Lmotor_PWM(50);
-  Rmotor_PWM(50);
-  delay(500);
+  /*Lmotor_PWM(100);
+  Rmotor_PWM(100);
+  delay(3000);//~120cm
   Lmotor_PWM(0);
-  Rmotor_PWM(0);
+  Rmotor_PWM(0);*/
 
-  while(!button_is_pressed());
-  digitalWrite(GREEN_LED_PIN, HIGH);
-  delay(1000);*/
+  //while(!button_is_pressed());
+  //digitalWrite(GREEN_LED_PIN, HIGH);
+  //delay(1000);
 
   /*set_motor_speed(28, 0);
   delay(500);
@@ -380,7 +375,7 @@ void setup() {
   delay(1000);*/
   // Use this to estimate motorDeadZonePWM
   //motor_calibration();
-
+  turn(90);
 
   delay(1000);
 
@@ -389,14 +384,14 @@ void setup() {
 
 bool invierte = false;
 void loop() {
-  /*int ret = motorPIDcontroller(0, false, 28, 12, true, 0, 0, false);
+  int ret = motorPIDcontroller(0, false, 10, 12, true, 0, 0, false);
   //delay(500);
   invierte = false;
   if(ret == 8) {
     set_motor_speed(0, 0);
     delay(500);
-    set_motor_speed(28, 0);
-    delay(350);
+    set_motor_speed(12, 0);
+    delay(1000);
     if(getDistanceCM(DIST_2_PIN)<25) invierte = true;
   } else {
     float distR = getDistanceCM(DIST_1_PIN);
@@ -410,10 +405,10 @@ void loop() {
     else turn(90);
   }
   if(ret == 8) {
-    set_motor_speed(30, 0);
-    delay(300);
-  }*/
-  int i=0;
+    set_motor_speed(12, 0);
+    delay(1000);
+  }
+  /*int i=0;
   for(i=0;i<30;i+=5){
     set_motor_speed(i, 0);
     delay(2000);
@@ -423,7 +418,7 @@ void loop() {
     set_motor_speed(0, 0);
     delay(500);
   }
-  delay(5000);
+  delay(5000);*/
 }
 
 
