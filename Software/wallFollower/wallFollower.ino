@@ -285,7 +285,7 @@ int motorPIDcontroller(float yawGoal, boolean term_yawReached, float c_speed, fl
       saturated = false;
     }
 
-    set_motor_speed(c_speed, min(max(v,-10),10));
+    set_motor_speed(c_speed, min(max(v,-5),5));
 
     prev_error = error;
   }
@@ -375,7 +375,7 @@ void setup() {
   delay(1000);*/
   // Use this to estimate motorDeadZonePWM
   //motor_calibration();
-  turn(90);
+  //turn(90);
 
   delay(1000);
 
@@ -391,7 +391,7 @@ void loop() {
     set_motor_speed(0, 0);
     delay(500);
     set_motor_speed(12, 0);
-    delay(1000);
+    delay(700);
     if(getDistanceCM(DIST_2_PIN)<25) invierte = true;
   } else {
     float distR = getDistanceCM(DIST_1_PIN);
@@ -406,7 +406,7 @@ void loop() {
   }
   if(ret == 8) {
     set_motor_speed(12, 0);
-    delay(1000);
+    delay(500);
   }
   /*int i=0;
   for(i=0;i<30;i+=5){
