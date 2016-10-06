@@ -8,6 +8,9 @@ Una de las competiciones es el laberinto (<http://rules.oshwdem.org/labirinto_es
 
 Para ello hemos diseñado el siguiente sistema paramétrico con las medidas reales que se utilizarán en la competición. Esperemos que os sea de utilidad, y... ¡nos vemos en la OSHWDem! :-)
 
+¡¡¡OJO!!! Las paredes_laberinto.stl son 1cm más largas de la cuenta! Sentimos las molestias que esto haya podido ocasionar... Nos hemos dado cuenta tarde :-S
+--
+
 ![](mini_laberinto_prueba.jpg)
 
 
