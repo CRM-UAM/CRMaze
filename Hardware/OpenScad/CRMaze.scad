@@ -112,7 +112,7 @@ translate([35,0,16]) bateria();
 dTornillo=3;
 xSharp=8;
 ySharp=10.5;
-!difference(){
+difference(){
 union() {
     translate([-13.5,-36.5,35]) linear_extrude(height=2) {
         //import("laberinto-B_Cu.dxf");
