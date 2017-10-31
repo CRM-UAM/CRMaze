@@ -12,8 +12,9 @@
 
 ![](fotos/robot.jpg)
 
+# Nota: El grosor de las paredes oficiales es 12mm en vez de 10mm. La cuadrícula tiene el mismo tamaño.
+
 ![](fotos/piezas.jpg)
 
 ![](fotos/impresion.jpg)
 
-# Nota: El grosor de las paredes oficiales es 12mm en vez de 10mm). La cuadrícula tiene el mismo tamaño.
