@@ -18,3 +18,4 @@
 
 ![](fotos/impresion.jpg)
 
+# Nota 2: La altura es superior al original para facilitar la fabricación de las tablillas (en el AKI no cortan medidas inferiores).
